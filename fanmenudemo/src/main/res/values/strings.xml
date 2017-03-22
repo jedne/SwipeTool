@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">FanMenuDemo</string>
+
+    <string name="fanmenu_select_text_recently">最近使用</string>
+    <string name="fanmenu_select_text_toolbox">快捷开关</string>
+    <string name="fanmenu_select_text_favorate">常用应用</string>
+</resources>

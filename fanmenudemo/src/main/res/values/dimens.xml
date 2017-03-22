@@ -1,0 +1,28 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    
+    <dimen name="fanmenu_center_view_width">45dp</dimen>
+    <dimen name="fanmenu_center_text_offset_x">5dp</dimen>
+    <dimen name="fanmenu_center_text_width_half">7dp</dimen>
+
+    <dimen name="fanmenu_select_text_size">15sp</dimen>
+    <dimen name="fanmenu_select_text_max_width">90dp</dimen>
+
+    <dimen name="fanmenu_select_text_bg_radius">142dp</dimen>
+    <dimen name="fanmenu_select_text_padding_center">72dp</dimen>
+
+    <dimen name="fanmenu_menu_layout_outer_radius">338dp</dimen>
+    <dimen name="fanmenu_menu_layout_inner_radius">150dp</dimen>
+
+    <dimen name="fanmenu_menu_item_icon_width">42dp</dimen>
+    <dimen name="fanmenu_menu_item_title_size">13sp</dimen>
+    <dimen name="fanmenu_menu_item_title_width">64dp</dimen>
+    <dimen name="fanmenu_menu_item_close_width">18sp</dimen>
+
+    <dimen name="fanmenu_menu_item_half_width">32dp</dimen>
+    <dimen name="fanmenu_menu_item_inner_radius">198dp</dimen>
+    <dimen name="fanmenu_menu_item_outer_radius">279dp</dimen>
+    <dimen name="fanmenu_menu_item_add_btn_width">39dp</dimen>
+</resources>
