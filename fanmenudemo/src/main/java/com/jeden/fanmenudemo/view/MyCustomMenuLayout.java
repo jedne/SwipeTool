@@ -45,6 +45,18 @@ public class MyCustomMenuLayout extends CommonPositionViewGroup{
     private long mLastTime;
     private int mTouchSlop;
 
+    private Runnable mLongClickRunnable = new LongClickRunnable();
+    private Vibrator mVibrator;
+    private boolean mIsEditModel;
+    private MyCustomMenuItemView mDownSelectChild;
+
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+        }
+    };
+
     public MyCustomMenuLayout(Context context) {
         super(context);
     }
@@ -192,10 +204,19 @@ public class MyCustomMenuLayout extends CommonPositionViewGroup{
                     mDownY = event.getY();
 
                     mLastTime = System.currentTimeMillis();
+                    if(mLongClickable)
+                    {
+                        handler.postDelayed(mLongClickRunnable, 600);
+                    }
+                    mDownSelectChild = (MyCustomMenuItemView) v;
                     break;
                 case MotionEvent.ACTION_MOVE:
                     float moveX = event.getX();
                     float moveY = event.getY();
+                    if(Math.abs(moveX - mInScreenY) > mTouchSlop || Math.abs(moveY - mInScreenY) > mTouchSlop)
+                    {
+                        handler.removeCallbacks(mLongClickRunnable);
+                    }
                     break;
                 case MotionEvent.ACTION_UP:
                     float upX = event.getX();
@@ -205,6 +226,7 @@ public class MyCustomMenuLayout extends CommonPositionViewGroup{
                     if(Math.abs(upX - mInScreenY) > mTouchSlop / 2 || Math.abs(upY - mInScreenY) > mTouchSlop / 2
                             || cur - mLastTime < 300)
                     {
+                        handler.removeCallbacks(mLongClickRunnable);
                         AppInfo tag = (AppInfo)v.getTag();
                         if(tag != null)
                         {
@@ -255,6 +277,11 @@ public class MyCustomMenuLayout extends CommonPositionViewGroup{
             case MotionEvent.ACTION_DOWN:
                 mInScreenX = event.getX();
                 mInScreenY = event.getY();
+                if(mIsEditModel)
+                {
+                    getParent().getParent().requestDisallowInterceptTouchEvent(true);
+                    return true;
+                }
 
 //                mLastTime = System.currentTimeMillis();
 //                if(mLongClickable)
@@ -267,12 +294,22 @@ public class MyCustomMenuLayout extends CommonPositionViewGroup{
             case MotionEvent.ACTION_MOVE:
                 float moveX = event.getX();
                 float moveY = event.getY();
+                if(mIsEditModel)
+                {
+                    getParent().getParent().requestDisallowInterceptTouchEvent(true);
+                    return true;
+                }
 //                if(Math.abs(moveX - mInScreenY) > mTouchSlop / 2 || Math.abs(moveY - mInScreenY) > mTouchSlop / 2)
 //                {
 //                    handler.removeCallbacks(mLongClickRunnable);
 //                }
                 break;
             case MotionEvent.ACTION_UP:
+                if(mIsEditModel)
+                {
+                    getParent().getParent().requestDisallowInterceptTouchEvent(true);
+                    return true;
+                }
 //                float upX = event.getX();
 //                float upY = event.getY();
 //                long cur = System.currentTimeMillis();
@@ -318,5 +355,51 @@ public class MyCustomMenuLayout extends CommonPositionViewGroup{
     public boolean isPointInRect(Rect r, float x, float y)
     {
         return x > r.left && x < r.right && y > r.top && y < r.bottom;
+    }
+
+    public void cancelEditModel()
+    {
+        endEditModel();
+    }
+
+    public void startEditModel()
+    {
+        Log.v(TAG, "startEditModel");
+        mIsEditModel = true;
+        List<AppInfo> datas = getData();
+        for(AppInfo appInfo : datas)
+        {
+            MyCustomMenuItemView child = (MyCustomMenuItemView) this.findViewWithTag(appInfo);
+            child.showDelBtn();
+        }
+    }
+
+    public void endEditModel()
+    {
+        Log.v(TAG, "endEditModel");
+        mIsEditModel = false;
+        List<AppInfo> datas = getData();
+        for(AppInfo appInfo : datas)
+        {
+            MyCustomMenuItemView child = (MyCustomMenuItemView) this.findViewWithTag(appInfo);
+            child.hideDelBtn();
+        }
+    }
+
+    class LongClickRunnable implements Runnable{
+        @Override
+        public void run() {
+            if(mStateChangeable != null)
+            {
+                mVibrator = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
+                long[] pattern = {0, 45};
+                mVibrator.vibrate(pattern, -1);
+
+                mStateChangeable.longClickStateChange(MyCustomMenuLayout.this);
+
+                startEditModel();
+
+            }
+        }
     }
 }

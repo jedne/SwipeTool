@@ -294,12 +294,44 @@ public class MyCustomSelectTextLayout extends CommonPositionViewGroup {
                 long curTime = System.currentTimeMillis();
                 if(FanMenuViewTools.getTwoPointDistance(upX, upY, mInScreenX, mInScreenY) < mTouchSlop && curTime - mLastTime < 400)
                 {
+                    selectTextAndRefresh();
                 }
             break;
             default:
             break;
         }
         return super.onTouchEvent(event);
+    }
+
+    public void selectTextAndRefresh()
+    {
+        int index;
+        double degree;
+        if(isLeft())
+        {
+            degree = FanMenuViewTools.getDegreeByPoint(mInScreenX, mHeight - mInScreenY);
+        }
+        else
+        {
+            degree = FanMenuViewTools.getDegreeByPoint(mWidth - mInScreenX, mHeight - mInScreenY);
+        }
+        if(degree < 30)
+        {
+            index = SelectCardState.CARD_STATE_FAVORATE;
+        }
+        else if(degree > 30 && degree < 60)
+        {
+            index = SelectCardState.CARD_STATE_TOOLBOX;
+        }
+        else
+        {
+            index = SelectCardState.CARD_STATE_RECENTLY;
+        }
+
+        if(mStateChangeable != null)
+        {
+            mStateChangeable.selectCardChange(index);
+        }
     }
 
     public boolean isInTheView(float x, float y)
