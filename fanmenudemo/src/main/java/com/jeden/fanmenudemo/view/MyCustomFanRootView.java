@@ -4,18 +4,23 @@ import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.animation.AnticipateOvershootInterpolator;
+import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
 
 import com.jeden.fanmenudemo.R;
+import com.jeden.fanmenudemo.bean.AppInfo;
 import com.jeden.fanmenudemo.tools.FanMenuConfig;
 import com.jeden.fanmenudemo.tools.FanMenuViewTools;
 import com.jeden.fanmenudemo.tools.MyCustomMenuManager;
-import com.jeden.fanmenudemo.view.base.PositionState;
 import com.jeden.fanmenudemo.view.base.MenuLayoutStateChangeable;
+import com.jeden.fanmenudemo.view.base.PositionState;
 import com.jeden.fanmenudemo.view.base.SelectCardState;
 
 /**
@@ -26,7 +31,7 @@ public class MyCustomFanRootView extends FrameLayout
 {
     public static final String TAG = MyCustomFanRootView.class.getSimpleName();
 
-    private static final double MIN_SLID_DEGREE = 15;
+    private static final double MIN_SLID_DEGREE = 30;
     private static final int MIN_SLID_SPEED = 3500;
 
     private int mPositionState = -1;
@@ -63,6 +68,8 @@ public class MyCustomFanRootView extends FrameLayout
     private VelocityTracker mVelocityTracker;
     private int mMaximumVelocity;
 
+    private MyCustomMenuItemView mMirrorView;
+
     public MyCustomFanRootView(Context context) {
         super(context);
         initView(context);
@@ -98,6 +105,7 @@ public class MyCustomFanRootView extends FrameLayout
 
         updateFanMenuSelectIndex(config.getSelectTextIndex(), 0);
     }
+
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
@@ -110,6 +118,13 @@ public class MyCustomFanRootView extends FrameLayout
 
         mSelectTextView.setMenuStateChangeListener(menuStateChangeListener);
         mMenuView.setMenuStateChangeListener(menuStateChangeListener);
+
+        int halfWidth = getContext().getResources().getDimensionPixelSize(R.dimen.fanmenu_menu_item_half_width);
+        mMirrorView = (MyCustomMenuItemView) LayoutInflater.from(getContext()).inflate(R.layout.my_custom_fan_item, null);
+        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(halfWidth * 2, halfWidth * 2);
+        addView(mMirrorView, lp);
+
+        mMirrorView.setVisibility(GONE);
     }
 
     public double pointAngle(float x, float y) {
@@ -123,7 +138,7 @@ public class MyCustomFanRootView extends FrameLayout
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-
+        Log.v(TAG, "onTouchEvent event:" + event.getAction());
         initVeloCityTracker(event);
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
@@ -180,7 +195,8 @@ public class MyCustomFanRootView extends FrameLayout
                 }
 
                 if (!isPointInMenuView(upX, upY)) {
-                    if (mSlideType == SLID_OVER && upTime - mLastTime < 400) {
+                    if (mSlideType == SLID_OVER && upTime - mLastTime < 400 && (Math.abs(upX - mDownInScreenX) < mTouchSlop
+                            && Math.abs(upY - mDownInScreenY) < mTouchSlop)) {
                         if(mEditState == STATE_EDIT)
                         {
                             mEditState = STATE_NORMAL;
@@ -226,7 +242,7 @@ public class MyCustomFanRootView extends FrameLayout
                 }
                 break;
             case MotionEvent.ACTION_UP:
-                if(mEditState == STATE_EDIT)
+                if(mEditState == STATE_EDIT && !isPointInMenuView(mDownInScreenX, mDownInScreenY))
                 {
                     return true;
                 }
@@ -269,8 +285,7 @@ public class MyCustomFanRootView extends FrameLayout
     }
 
     public void removeFanMenuView(){
-        MyCustomMenuManager.removeFanMenuView(getContext());
-        MyCustomMenuManager.showFlowingView(getContext());
+        closeFanMenu();
     }
 
     MenuLayoutStateChangeable menuStateChangeListener = new MenuLayoutStateChangeable()
@@ -285,10 +300,43 @@ public class MyCustomFanRootView extends FrameLayout
         }
 
         @Override
-        public void longClickStateChange(View view) {
-            mEditState = STATE_EDIT;
-            if(view instanceof MyCustomMenuLayout)
+        public void longClickStateChange(View view, boolean isEditModel) {
+            mEditState = isEditModel ? STATE_EDIT : STATE_NORMAL;
+            if(view != null && view instanceof MyCustomMenuLayout)
                 mEditView = (MyCustomMenuLayout) view;
+        }
+
+        @Override
+        public void dragViewAndRefresh(float x, float y, AppInfo appInfo, boolean hidden) {
+            if(hidden)
+            {
+                mMirrorView.setVisibility(GONE);
+                return;
+            }
+
+            if(mMirrorView.getVisibility() == GONE)
+            {
+                mMirrorView.setVisibility(View.VISIBLE);
+                mMirrorView.setItemIcon(appInfo.getAppIcon());
+                mMirrorView.setTitle(appInfo.getAppLabel());
+                mMirrorView.showDelBtn();
+            }
+
+            x += mMenuView.getLeft();
+            y += mMenuView.getTop();
+
+            mMirrorView.setTranslationX(x);
+            mMirrorView.setTranslationY(y);
+        }
+
+        @Override
+        public void addBtnClicked(View view, int selectCard) {
+
+        }
+
+        @Override
+        public void menuItemClicked(View view, AppInfo appInfo) {
+
         }
     };
 
@@ -296,7 +344,7 @@ public class MyCustomFanRootView extends FrameLayout
     {
         float temp = toState - fromeState;
         ValueAnimator va = ValueAnimator.ofFloat(offset, temp);
-        va.setDuration(300);
+        va.setDuration(250);
         va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -416,5 +464,83 @@ public class MyCustomFanRootView extends FrameLayout
             mVelocityTracker.recycle();
             mVelocityTracker = null;
         }
+    }
+
+    public void closeFanMenu()
+    {
+        ValueAnimator va = ValueAnimator.ofFloat(1.0f, 0f);
+        va.setDuration(500);
+        va.setInterpolator(new AnticipateOvershootInterpolator(0.9f));
+        va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float value = (float) animation.getAnimatedValue();
+                scaleChild(value);
+            }
+        });
+
+        va.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                MyCustomMenuManager.closeFanMenu(getContext());
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+            }
+        });
+        va.start();
+    }
+
+    public void showFanMenu(){
+        final ValueAnimator va = ValueAnimator.ofFloat(0f, 1.0f);
+        va.setDuration(500);
+        va.setInterpolator(new OvershootInterpolator(1.2f));
+        va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float value = (float) animation.getAnimatedValue();
+                scaleChild(value);
+            }
+        });
+
+        va.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                MyCustomMenuManager.showFanMenu(getContext());
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+            }
+        });
+        va.start();
+    }
+
+    public void scaleChild(float offset)
+    {
+        mBackgroundView.setAlpha(((int) (offset * 10) / 10f));
+        mCenterView.setScaleX(offset);
+        mSelectTextView.setScaleX(offset);
+        mMenuView.setScaleX(offset);
+        mCenterView.setScaleY(offset);
+        mSelectTextView.setScaleY(offset);
+        mMenuView.setScaleY(offset);
     }
 }

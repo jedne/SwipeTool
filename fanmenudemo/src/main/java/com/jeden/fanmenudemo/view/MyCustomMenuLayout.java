@@ -1,5 +1,7 @@
 package com.jeden.fanmenudemo.view;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -14,7 +16,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import com.jeden.fanmenudemo.R;
 import com.jeden.fanmenudemo.bean.AppInfo;
@@ -23,6 +26,7 @@ import com.jeden.fanmenudemo.tools.FanMenuViewTools;
 import com.jeden.fanmenudemo.view.base.CommonPositionViewGroup;
 import com.jeden.fanmenudemo.view.base.SelectCardState;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,25 +36,29 @@ import java.util.List;
 public class MyCustomMenuLayout extends CommonPositionViewGroup{
 
     public static final String TAG = MyCustomMenuLayout.class.getSimpleName();
+    private static final String ADD_VIEW_TAG = "MENU_LAYOUT_ITEM_ADD_TAG";
     private int mMenuType = SelectCardState.CARD_STATE_RECENTLY;
     private boolean mLongClickable;
 
     private int mItemHalfWidth;
     private int mItemInnerRadius;
     private int mItemOuterRadius;
-    private int mItemAddWidth;
 
-    private float mInScreenX;
-    private float mInScreenY;
     private long mLastTime;
     private int mTouchSlop;
 
     private Runnable mLongClickRunnable = new LongClickRunnable();
-    private Vibrator mVibrator;
-    private boolean mIsEditModel;
+    protected Vibrator mVibrator;
+    protected boolean mIsEditModel;
     private MyCustomMenuItemView mDownSelectChild;
 
-    private Handler handler = new Handler(){
+    private boolean mIsDeleting = false;
+    private int[] mLastSlot = new int[3];
+    private MyCustomMenuItemView[] mLastSlotView = new MyCustomMenuItemView[9];
+    private Rect[] mDragIndexPoint = new Rect[9];
+    private boolean mIsDragging = false;
+
+    private static Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -77,6 +85,7 @@ public class MyCustomMenuLayout extends CommonPositionViewGroup{
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.FanMenu);
         mMenuType = ta.getInteger(R.styleable.FanMenu_menuType, -1);
         mLongClickable = ta.getBoolean(R.styleable.FanMenu_longClickable, false);
+        ta.recycle();
 
         LayoutInflater inflater = LayoutInflater.from(context);
         MyCustomMenuItemView itemView;
@@ -86,15 +95,17 @@ public class MyCustomMenuLayout extends CommonPositionViewGroup{
         for(AppInfo info : tempAppInfo)
         {
             itemView = (MyCustomMenuItemView) inflater.inflate(R.layout.my_custom_fan_item, null);
+            itemView.setToolboxModel(mMenuType == SelectCardState.CARD_STATE_TOOLBOX);
             itemView.setTitle(info.getAppLabel());
             itemView.setItemIcon(info.getAppIcon());
             itemView.setTag(info);
             this.addView(itemView);
-            itemView.setOnTouchListener(new MyViewTouchListener());
+            itemView.setOnTouchListener(mMyViewTouchListener);
         }
 
+        addViewIfNeed(inflater);
+
         Resources rs = getResources();
-        mItemAddWidth = rs.getDimensionPixelSize(R.dimen.fanmenu_menu_item_add_btn_width);
         mItemHalfWidth = rs.getDimensionPixelSize(R.dimen.fanmenu_menu_item_half_width);
         mItemInnerRadius = rs.getDimensionPixelSize(R.dimen.fanmenu_menu_item_inner_radius);
         mItemOuterRadius = rs.getDimensionPixelSize(R.dimen.fanmenu_menu_item_outer_radius);
@@ -119,6 +130,7 @@ public class MyCustomMenuLayout extends CommonPositionViewGroup{
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         int count = getChildCount();
+        count = count > 9 ? 9 : count;
         Point p = new Point();
 
         for(int i = 0; i < count; i++)
@@ -130,6 +142,17 @@ public class MyCustomMenuLayout extends CommonPositionViewGroup{
 
             getItemCenterPoint(i, count, p);
             child.layout(p.x - mItemHalfWidth, p.y - mItemHalfWidth, p.x + mItemHalfWidth, p.y + mItemHalfWidth);
+        }
+    }
+
+    public void addViewIfNeed(LayoutInflater inflater)
+    {
+        if(mMenuType == SelectCardState.CARD_STATE_FAVORATE || mMenuType == SelectCardState.CARD_STATE_TOOLBOX)
+        {
+            FrameLayout addView = (FrameLayout) inflater.inflate(R.layout.my_custom_fan_item_add, null);
+            addView.setTag(ADD_VIEW_TAG);
+            addView.setOnTouchListener(mMyViewTouchListener);
+            this.addView(addView);
         }
     }
 
@@ -190,32 +213,57 @@ public class MyCustomMenuLayout extends CommonPositionViewGroup{
         return tempAppInfo;
     }
 
-    class MyViewTouchListener implements View.OnTouchListener
+    OnTouchListener mMyViewTouchListener = new View.OnTouchListener()
     {
         private float mDownX;
         private float mDownY;
+        private int mDownType = DOWN_NULL;
+        private static final int DOWN_NULL = -1;
+        private static final int DOWN_DELETE = 1;
+
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             Log.v(TAG, "onTouch event:" + event.getAction());
+            if(mIsDeleting)
+            {
+                return true;
+            }
+
             switch (event.getAction())
             {
                 case MotionEvent.ACTION_DOWN:
                     mDownX = event.getX();
                     mDownY = event.getY();
-
                     mLastTime = System.currentTimeMillis();
-                    if(mLongClickable)
+
+                    if(v instanceof  MyCustomMenuItemView)
                     {
-                        handler.postDelayed(mLongClickRunnable, 600);
+                        if(mLongClickable && !mIsEditModel)
+                        {
+                            handler.postDelayed(mLongClickRunnable, 600);
+                        }
+
+                        mDownSelectChild = (MyCustomMenuItemView) v;
+                        if(mIsEditModel && isTouchTheDeleteView(mDownSelectChild, mDownX, mDownY))
+                        {
+                            mDownType = DOWN_DELETE;
+                        }
                     }
-                    mDownSelectChild = (MyCustomMenuItemView) v;
                     break;
                 case MotionEvent.ACTION_MOVE:
                     float moveX = event.getX();
                     float moveY = event.getY();
-                    if(Math.abs(moveX - mInScreenY) > mTouchSlop || Math.abs(moveY - mInScreenY) > mTouchSlop)
+                    if(Math.abs(moveX - mDownX) > mTouchSlop / 2 || Math.abs(moveY - mDownY) > mTouchSlop / 2)
                     {
+                        mDownType = DOWN_NULL;
                         handler.removeCallbacks(mLongClickRunnable);
+                    }
+
+                    if(mIsEditModel && mDownSelectChild != null)
+                    {
+                        Log.v(TAG, "onTouch: mirror drag x:" + moveX + "y:" + moveY);
+                        mIsDragging = true;
+                        addMirrorViewAndDrag(moveX - mDownX, moveY - mDownY);
                     }
                     break;
                 case MotionEvent.ACTION_UP:
@@ -223,48 +271,212 @@ public class MyCustomMenuLayout extends CommonPositionViewGroup{
                     float upY = event.getY();
                     long cur = System.currentTimeMillis();
 
-                    if(Math.abs(upX - mInScreenY) > mTouchSlop / 2 || Math.abs(upY - mInScreenY) > mTouchSlop / 2
+                    if(mIsEditModel && mIsDragging)
+                    {
+                        restoreDragView(upX - mDownX, upY - mDownY);
+                        break;
+                    }
+
+                    if(Math.abs(upX - mDownX) > mTouchSlop || Math.abs(upY - mDownY) > mTouchSlop
                             || cur - mLastTime < 300)
                     {
-                        handler.removeCallbacks(mLongClickRunnable);
-                        AppInfo tag = (AppInfo)v.getTag();
-                        if(tag != null)
+                        if(mDownType == DOWN_DELETE)
                         {
-                            Toast.makeText(getContext(), "clickItem name:" + tag.getAppLabel(), Toast.LENGTH_LONG).show();
+                            deleteItemAndRefresh(mDownSelectChild);
+                        }
+                        else if(!mIsEditModel)
+                        {
+                            handler.removeCallbacks(mLongClickRunnable);
+
+                            btnClicked(v.getTag());
                         }
                     }
+
+                    mDownType = DOWN_NULL;
                     break;
                 default:
+                    handler.removeCallbacks(mLongClickRunnable);
+                    mDownType = DOWN_NULL;
                     break;
             }
             return true;
         }
-    }
+    };
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        Log.v(TAG, "onTouchEvent event:" + event.getAction());
-        switch (event.getAction()){
-            case MotionEvent.ACTION_DOWN:
-                mInScreenX = event.getX();
-                mInScreenY = event.getY();
-
-                break;
-            case MotionEvent.ACTION_MOVE:
-                float moveX = event.getX();
-                float moveY = event.getY();
-                if(Math.abs(moveX - mInScreenY) > mTouchSlop || Math.abs(moveY - mInScreenY) > mTouchSlop)
-                {
-
-                }
-                break;
-            case MotionEvent.ACTION_UP:
-                break;
-            default:
-                break;
+    public void btnClicked(Object obj)
+    {
+        if(obj == null || mStateChangeable == null)
+        {
+            return;
         }
-        return super.onTouchEvent(event);
+
+        if(obj instanceof AppInfo)
+        {
+            mStateChangeable.menuItemClicked(this, (AppInfo)obj);
+        }
+        else
+        {
+            mStateChangeable.addBtnClicked(this, mMenuType);
+        }
     }
+
+    public boolean isTouchTheDeleteView(MyCustomMenuItemView v, float x, float y)
+    {
+        ImageView delete = v.getDeleteView();
+        if(x > delete.getLeft() && x < delete.getRight() && y > delete.getTop() && y < delete.getBottom())
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public void deleteItemAndRefresh(MyCustomMenuItemView child)
+    {
+        List<AppInfo> datas = getData();
+        AppInfo appInfo = (AppInfo) child.getTag();
+        int index = datas.indexOf(appInfo);
+        deleteItemAndReorder(child, index);
+        datas.remove(appInfo);
+    }
+
+    public void deleteItemAndReorder(final MyCustomMenuItemView child, final int index)
+    {
+        mIsDeleting = true;
+
+        final int count = getChildCount();
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(1.0f, 0f);
+        valueAnimator.setDuration(150);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float values = (float) animation.getAnimatedValue();
+                child.setScaleX(values);
+                child.setScaleY(values);
+            }
+        });
+        valueAnimator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                ArrayList<View> delFrom = new ArrayList<>();
+                ArrayList<Point> delTo = new ArrayList<>();
+                Point p;
+                for (int i = 0; i < count; i++) {
+                    View temp = getChildAt(i);
+                    if(i != index)
+                    {
+                        delFrom.add(temp);
+
+                        p = new Point();
+                        p.x = isLeft() ? 0 : getWidth();
+                        p.y = getHeight();
+
+                        getItemCenterPoint(delTo.size(), count - 1, p);
+                        p.x -= mItemHalfWidth;
+                        p.y -= mItemHalfWidth;
+
+                        p.x -= temp.getX();
+                        p.y -= temp.getY();
+                        delTo.add(p);
+                    }
+                }
+
+                deleteViewByAnimator(delFrom, delTo, child);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+            }
+        });
+        valueAnimator.start();
+    }
+
+    public void deleteViewByAnimator(final ArrayList<View> delFrom, final ArrayList<Point> delTo, final MyCustomMenuItemView child)
+    {
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0f, 1.0f);
+        valueAnimator.setDuration(250);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float values = (float) animation.getAnimatedValue();
+                Log.v(TAG, "deleteViewByAnimator values:" + values);
+                for(int i = 0; i < delFrom.size(); i++)
+                {
+                    View temp = delFrom.get(i);
+                    float x = delTo.get(i).x * values;
+                    float y = delTo.get(i).y * values;
+
+                    temp.setTranslationX(x);
+                    temp.setTranslationY(y);
+                }
+            }
+        });
+        valueAnimator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                for(View temp : delFrom)
+                {
+                    temp.setTranslationX(0);
+                    temp.setTranslationY(0);
+                }
+                MyCustomMenuLayout.this.removeView(child);
+
+                if(getChildCount() == 1 && !(getChildAt(0) instanceof MyCustomMenuItemView) && mStateChangeable != null)
+                {
+                    mStateChangeable.longClickStateChange(null, false);
+                    endEditModel();
+                }
+
+                mIsDeleting = false;
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+            }
+        });
+        valueAnimator.start();
+    }
+
+//    @Override
+//    public boolean onTouchEvent(MotionEvent event) {
+//        Log.v(TAG, "onTouchEvent event:" + event.getAction());
+//        switch (event.getAction()){
+//            case MotionEvent.ACTION_DOWN:
+//                mInScreenX = event.getX();
+//                mInScreenY = event.getY();
+//
+//                break;
+//            case MotionEvent.ACTION_MOVE:
+//                float moveX = event.getX();
+//                float moveY = event.getY();
+//                if(Math.abs(moveX - mInScreenY) > mTouchSlop || Math.abs(moveY - mInScreenY) > mTouchSlop)
+//                {
+//
+//                }
+//                break;
+//            case MotionEvent.ACTION_UP:
+//                break;
+//            default:
+//                break;
+//        }
+//        return super.onTouchEvent(event);
+//    }
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
@@ -273,83 +485,275 @@ public class MyCustomMenuLayout extends CommonPositionViewGroup{
             return false;
         }
         Log.v(TAG, "dispatchTouchEvent event:" + event.getAction());
-        switch (event.getAction()){
-            case MotionEvent.ACTION_DOWN:
-                mInScreenX = event.getX();
-                mInScreenY = event.getY();
-                if(mIsEditModel)
-                {
-                    getParent().getParent().requestDisallowInterceptTouchEvent(true);
-                    return true;
-                }
-
-//                mLastTime = System.currentTimeMillis();
-//                if(mLongClickable)
+//        switch (event.getAction()){
+//            case MotionEvent.ACTION_DOWN:
+//                mInScreenX = event.getX();
+//                mInScreenY = event.getY();
+//                if(mIsEditModel)
 //                {
-//                    handler.postDelayed(mLongClickRunnable, 600);
+//                    getParent().getParent().requestDisallowInterceptTouchEvent(true);
+//                    return true;
 //                }
-//                mDownSelectChild = getChildByPoint(mInScreenX, mInScreenY);
-
-                break;
-            case MotionEvent.ACTION_MOVE:
-                float moveX = event.getX();
-                float moveY = event.getY();
-                if(mIsEditModel)
-                {
-                    getParent().getParent().requestDisallowInterceptTouchEvent(true);
-                    return true;
-                }
-//                if(Math.abs(moveX - mInScreenY) > mTouchSlop / 2 || Math.abs(moveY - mInScreenY) > mTouchSlop / 2)
+//
+////                mLastTime = System.currentTimeMillis();
+////                if(mLongClickable)
+////                {
+////                    handler.postDelayed(mLongClickRunnable, 600);
+////                }
+////                mDownSelectChild = getChildByPoint(mInScreenX, mInScreenY);
+//
+//                break;
+//            case MotionEvent.ACTION_MOVE:
+//                float moveX = event.getX();
+//                float moveY = event.getY();
+//                if(mIsEditModel)
 //                {
-//                    handler.removeCallbacks(mLongClickRunnable);
+//                    getParent().getParent().requestDisallowInterceptTouchEvent(true);
+//                    Log.v(TAG, "dispatchTouchEvent return true:");
+//                    return true;
 //                }
-                break;
-            case MotionEvent.ACTION_UP:
-                if(mIsEditModel)
-                {
-                    getParent().getParent().requestDisallowInterceptTouchEvent(true);
-                    return true;
-                }
-//                float upX = event.getX();
-//                float upY = event.getY();
-//                long cur = System.currentTimeMillis();
-//                if(Math.abs(upX - mInScreenY) > mTouchSlop / 2 || Math.abs(upY - mInScreenY) > mTouchSlop / 2
-//                        || cur - mLastTime < 300)
+////                if(Math.abs(moveX - mInScreenY) > mTouchSlop / 2 || Math.abs(moveY - mInScreenY) > mTouchSlop / 2)
+////                {
+////                    handler.removeCallbacks(mLongClickRunnable);
+////                }
+//                break;
+//            case MotionEvent.ACTION_UP:
+//                if(mIsEditModel)
 //                {
-//                    handler.removeCallbacks(mLongClickRunnable);
+//                    getParent().getParent().requestDisallowInterceptTouchEvent(true);
+//                    return true;
 //                }
-                break;
-            default:
-                break;
-        }
+////                float upX = event.getX();
+////                float upY = event.getY();
+////                long cur = System.currentTimeMillis();
+////                if(Math.abs(upX - mInScreenY) > mTouchSlop / 2 || Math.abs(upY - mInScreenY) > mTouchSlop / 2
+////                        || cur - mLastTime < 300)
+////                {
+////                    handler.removeCallbacks(mLongClickRunnable);
+////                }
+//                break;
+//            default:
+//                break;
+//        }
         return super.dispatchTouchEvent(event);
     }
 
-    public MyCustomMenuItemView getChildByPoint(float x, float y)
+    public void changeTwoChildPosition(final MyCustomMenuItemView from, final AppInfo toApp)
     {
-        Point p = new Point();
-        p.x = isLeft() ? 0 : getWidth();
-        p.y = getHeight();
 
-        List<AppInfo> datas = getData();
-        int count = datas.size();
-        Rect r = new Rect();
+//        float toL = to.getTranslationX() == 0 ? to.getLeft() : to.getTranslationX();
+//        float toT = to.getTranslationY() == 0 ? to.getTop() : to.getTranslationY();
+//        float fromL = from.getTranslationX() == 0 ? from.getLeft() : from.getTranslationX();
+//        float fromT = from.getTranslationY() == 0 ? from.getTop() : from.getTranslationY();
+        final float fromTranX = from.getTranslationX();
+        final float fromTranY = from.getTranslationY();
+        final float offsetX = mLastSlot[1] - (from.getLeft() + fromTranX);
+        final float offsetY = mLastSlot[2] - (from.getTop() + fromTranY);
+
+//        Log.v(TAG, "changeTwoChildPosition: toTranX:" + toTranX + "toTranY:" + toTranY + "fromTranX:" + fromTranX + "fromTranY:" + fromTranY
+//         + "toL:" + to.getLeft() + "fromL:" + from.getLeft() + "toT:" + to.getTop() + "fromT:" + from.getTop());
+
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0f, 1.0f);
+        valueAnimator.setDuration(250);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float values = (float) animation.getAnimatedValue();
+                Log.v(TAG, "changeTwoChildPosition values:" + values);
+                from.setTranslationX(fromTranX + offsetX * values);
+                from.setTranslationY(fromTranY + offsetY * values);
+            }
+        });
+        valueAnimator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                List<AppInfo> datas = getData();
+                AppInfo fromApp = (AppInfo) from.getTag();
+                int fromIndex = datas.indexOf(fromApp);
+                int toIndex = datas.indexOf(toApp);
+                datas.set(toIndex, fromApp);
+                datas.set(fromIndex, toApp);
+//                to.setTranslationX(- offsetX);
+//                to.setTranslationY(- offsetY);
+
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+            }
+        });
+        valueAnimator.start();
+    }
+
+    public void addMirrorViewAndDrag(float x, float y)
+    {
+        if(mDownSelectChild == null || mStateChangeable == null)
+        {
+            return;
+        }
+
+        x += mDownSelectChild.getTranslationX();
+        y += mDownSelectChild.getTranslationY();
+
+        if(mDownSelectChild.getVisibility() != GONE)
+        {
+            AppInfo appInfo = (AppInfo) mDownSelectChild.getTag();
+            mStateChangeable.dragViewAndRefresh(getLeft() + mDownSelectChild.getLeft() + x,
+                    getTop() + mDownSelectChild.getTop() + y, appInfo, false);
+            mDownSelectChild.setVisibility(GONE);
+
+            mLastSlot[0] = indexOfChild(mDownSelectChild);
+            mLastSlot[1] = mDownSelectChild.getLeft();
+            mLastSlot[2] = mDownSelectChild.getTop();
+
+            int count = getChildCount();
+            for(int i = 0; i < mLastSlotView.length; i++)
+            {
+                if(i < count)
+                {
+                    View temp = getChildAt(i);
+                    if(temp instanceof MyCustomMenuItemView)
+                        mLastSlotView[i] = (MyCustomMenuItemView) temp;
+                    else
+                        mLastSlotView[i] = null;
+                }
+                else
+                {
+                    mLastSlotView[i] = null;
+                }
+            }
+            initDragIndexRect();
+        }
+        else
+        {
+            mStateChangeable.dragViewAndRefresh(getLeft() + mDownSelectChild.getLeft() + x, getTop() + mDownSelectChild.getTop() + y, null, false);
+        }
+
+
+        int selectIndex = getChildByPoint(mDownSelectChild.getLeft() + mItemHalfWidth + (int)x,
+                mDownSelectChild.getTop() + mItemHalfWidth + (int)y);
+        if(selectIndex >= 0 && selectIndex < mLastSlotView.length && mLastSlotView[selectIndex] != null)
+        {
+            if(selectIndex == mLastSlot[0])
+            {
+                return;
+            }
+            Log.v(TAG, "addMirrorView getChildByPoint child:" + ((AppInfo)mLastSlotView[selectIndex].getTag()).getAppLabel());
+            MyCustomMenuItemView from = mLastSlotView[selectIndex];
+            changeTwoChildPosition(from, getData().get(mLastSlot[0]));
+            MyCustomMenuItemView temp = mLastSlotView[mLastSlot[0]];
+            mLastSlotView[mLastSlot[0]] = from;
+            mLastSlotView[selectIndex] = temp;
+            mLastSlot[0] = selectIndex;
+            mLastSlot[1] = mDragIndexPoint[selectIndex].left;
+            mLastSlot[2] = mDragIndexPoint[selectIndex].top;
+        }
+    }
+
+    public void restoreDragView(final float x, final float y)
+    {
+        if(mStateChangeable == null)
+        {
+            return;
+        }
+
+        final float offsetX = mLastSlot[1] - (mDownSelectChild.getLeft() + x);
+        final float offsetY = mLastSlot[2] - (mDownSelectChild.getTop() + y);
+
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0f, 1.0f);
+        valueAnimator.setDuration(250);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float values = (float) animation.getAnimatedValue();
+                Log.v(TAG, "deleteViewByAnimator values:" + values);
+                mStateChangeable.dragViewAndRefresh(getLeft() + mDownSelectChild.getLeft() + offsetX * values + x,
+                        getTop() + mDownSelectChild.getTop() + offsetY * values + y, null, false);
+            }
+        });
+        valueAnimator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mStateChangeable.dragViewAndRefresh(getLeft() + mLastSlot[1], getTop() + mLastSlot[2], null, true);
+                mDownSelectChild.setVisibility(VISIBLE);
+
+                View add = findViewWithTag(ADD_VIEW_TAG);
+                removeAllViews();
+                for(int i = 0; i < mLastSlotView.length; i++)
+                {
+                    View temp = mLastSlotView[i];
+                    if(temp != null)
+                    {
+                        temp.setTranslationX(0);
+                        temp.setTranslationY(0);
+                        addView(temp);
+                    }
+                }
+                addView(add);
+                requestLayout();
+                mIsDragging = false;
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+            }
+        });
+        valueAnimator.start();
+    }
+
+    public void initDragIndexRect()
+    {
+        int count = getChildCount();
+        count = count > 9 ? 9 : count;
+
+        Rect r;
         for(int i = 0; i < count; i++)
         {
+            Point p = new Point();
+            p.x = isLeft() ? 0 : getWidth();
+            p.y = getHeight();
             getItemCenterPoint(i, count, p);
+            r = new Rect();
             r.left = p.x - mItemHalfWidth;
             r.top = p.y - mItemHalfWidth;
             r.right = p.x + mItemHalfWidth;
             r.bottom = p.y + mItemHalfWidth;
+            if(i < mDragIndexPoint.length)
+            {
+                mDragIndexPoint[i] = r;
+            }
+        }
+    }
+
+    public int getChildByPoint(float x, float y)
+    {
+        for(int i = 0; i < mDragIndexPoint.length; i++)
+        {
+            Rect r = mDragIndexPoint[i];
             if(isPointInRect(r, x, y))
             {
                 Log.v(TAG, "getChildByPoint index:" + i);
-                return (MyCustomMenuItemView) findViewWithTag(datas.get(i));
+                return i;
             }
-
         }
 
-        return null;
+        return -1;
     }
 
     public boolean isPointInRect(Rect r, float x, float y)
@@ -391,14 +795,12 @@ public class MyCustomMenuLayout extends CommonPositionViewGroup{
         public void run() {
             if(mStateChangeable != null)
             {
+                mStateChangeable.longClickStateChange(MyCustomMenuLayout.this, true);
+                startEditModel();
+
                 mVibrator = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
                 long[] pattern = {0, 45};
                 mVibrator.vibrate(pattern, -1);
-
-                mStateChangeable.longClickStateChange(MyCustomMenuLayout.this);
-
-                startEditModel();
-
             }
         }
     }

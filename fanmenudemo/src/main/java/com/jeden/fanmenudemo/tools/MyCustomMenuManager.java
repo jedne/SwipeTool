@@ -35,6 +35,9 @@ public class MyCustomMenuManager {
         this.mWindowManager = wm;
 
         this.mLayoutInflater = LayoutInflater.from(context);
+
+        initFlowingView();
+        initFanMenuView();
     }
 
     private void initFlowingView(){
@@ -61,7 +64,8 @@ public class MyCustomMenuManager {
                 WindowManager.LayoutParams.FILL_PARENT,
                 WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
-                        WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
+                        WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN |
+                        WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
                 PixelFormat.TRANSLUCENT);
         return lp;
     }
@@ -100,8 +104,7 @@ public class MyCustomMenuManager {
         return lp;
     }
 
-    public void showFlowing(){
-        initFlowingView();
+    private void showFlowing(){
         if(mFlowingView.getParent() != null) {
             Log.w(TAG, "flowing view have showed");
             return;
@@ -114,7 +117,7 @@ public class MyCustomMenuManager {
         mWindowManager.addView(mFlowingView, mFlowingViewLP);
     }
 
-    public void updateFlowingPosition(WindowManager.LayoutParams params){
+    private void updateFlowingPosition(WindowManager.LayoutParams params){
         if(mFlowingView != null && mFlowingView.getParent() != null)
         {
             mFlowingViewLP = params;
@@ -126,29 +129,30 @@ public class MyCustomMenuManager {
         }
     }
 
-    public void showFanMenu(){
-        initFanMenuView();
+    private void showFanMenu(){
         if(mFanRootView.getParent() != null) {
             Log.w(TAG, "fan menu have showed");
             return;
         }
         mFanRootView.initFanMenuConfig();
         mWindowManager.addView(mFanRootView, generateFanMenuLP());
+        mFanRootView.showFanMenu();
     }
 
-    public void removeFlowing(){
+    private void removeFlowing(){
         if(mWindowManager != null && mFlowingView != null && mFlowingView.getParent() != null){
             mWindowManager.removeView(mFlowingView);
         }
     }
 
-    public void removeFanMenu(){
+    private void removeFanMenu(){
         if(mWindowManager != null && mFanRootView != null && mFanRootView.getParent() != null){
             mWindowManager.removeView(mFanRootView);
         }
     }
 
-    public synchronized static MyCustomMenuManager getInstance(Context context){
+
+    private synchronized static MyCustomMenuManager getInstance(Context context){
         if(mInstance == null){
             WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
             mInstance = new MyCustomMenuManager(context, windowManager);
@@ -160,19 +164,23 @@ public class MyCustomMenuManager {
         getInstance(context).showFlowing();
     }
 
-    public static void showFanMenuView(Context context) {
-        getInstance(context).showFanMenu();
-    }
-
     public static void removeFlowingView(Context context){
         getInstance(context).removeFlowing();
     }
 
-    public static void removeFanMenuView(Context context){
-        getInstance(context).removeFanMenu();
-    }
-
     public static void updateFlowingPosition(Context context, WindowManager.LayoutParams params){
         getInstance(context).updateFlowingPosition(params);
+    }
+
+    public static void closeFanMenu(Context context)
+    {
+        getInstance(context).removeFanMenu();
+        getInstance(context).showFlowing();
+    }
+
+    public static void showFanMenu(Context context)
+    {
+        getInstance(context).showFanMenu();
+        getInstance(context).removeFlowing();
     }
 }

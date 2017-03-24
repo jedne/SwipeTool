@@ -5,10 +5,12 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.jeden.fanmenudemo.R;
 import com.jeden.fanmenudemo.bean.AppInfo;
 import com.jeden.fanmenudemo.tools.ContentProvider;
 import com.jeden.fanmenudemo.tools.DataBeans;
@@ -53,11 +55,8 @@ public class MyService extends Service {
             {
                 recentlys.add(mlistAppInfo.get(i));
             }
-            else if(i < 27)
-            {
-                toolbox.add(mlistAppInfo.get(i));
-            }
         }
+        initToolbox(toolbox);
 
         ContentProvider.getmInstance().setmFavorates(favorates);
         ContentProvider.getmInstance().setmRecentlys(recentlys);
@@ -68,6 +67,72 @@ public class MyService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         showFlowingView();
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    public void initToolbox(List<AppInfo> toolbox)
+    {
+        toolbox.add(generateToolbox("screenshot"));
+        toolbox.add(generateToolbox("alarm"));
+        toolbox.add(generateToolbox("bluetooth"));
+        toolbox.add(generateToolbox("calculator"));
+        toolbox.add(generateToolbox("flight"));
+        toolbox.add(generateToolbox("locker"));
+        toolbox.add(generateToolbox("rotate"));
+        toolbox.add(generateToolbox("wifi"));
+        toolbox.add(generateToolbox("camera"));
+    }
+
+    public AppInfo generateToolbox(String name)
+    {
+        Resources rs = getResources();
+        AppInfo appInfo = new AppInfo();
+        if("screenshot".equals(name))
+        {
+            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_screenshot));
+            appInfo.setAppLabel("截屏");
+        }
+        else if("alarm".equals(name))
+        {
+            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_alarm));
+            appInfo.setAppLabel("闹钟");
+        }
+        else if("bluetooth".equals(name))
+        {
+            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_bluetooth));
+            appInfo.setAppLabel("蓝牙");
+        }
+        else if("calculator".equals(name))
+        {
+            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_calculator));
+            appInfo.setAppLabel("计算器");
+        }
+        else if("flight".equals(name))
+        {
+            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_flight));
+            appInfo.setAppLabel("飞行模式");
+        }
+        else if("locker".equals(name))
+        {
+            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_locker));
+            appInfo.setAppLabel("锁屏");
+        }
+        else if("rotate".equals(name))
+        {
+            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_rotate));
+            appInfo.setAppLabel("自动旋转");
+        }
+        else if("wifi".equals(name))
+        {
+            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_wifi));
+            appInfo.setAppLabel("WIFI");
+        }
+        else if("camera".equals(name))
+        {
+            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_camera));
+            appInfo.setAppLabel("照相机");
+        }
+
+        return appInfo;
     }
 
     public void showFlowingView(){

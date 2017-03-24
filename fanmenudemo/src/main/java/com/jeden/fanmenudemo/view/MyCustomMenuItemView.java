@@ -19,6 +19,7 @@ public class MyCustomMenuItemView extends RelativeLayout {
     private ImageView mDelIcon;
     private ImageView mIcon;
     private TextView mTitle;
+    private boolean mToolboxModel = false;
 
     public MyCustomMenuItemView(Context context) {
         super(context);
@@ -58,6 +59,20 @@ public class MyCustomMenuItemView extends RelativeLayout {
 
     public void setItemIcon(Drawable icon) {
         mIcon.setImageDrawable(icon);
+    }
+
+    public ImageView getDeleteView(){
+        return mDelIcon;
+    }
+
+    public void setToolboxModel(boolean toolboxModel)
+    {
+        mToolboxModel = toolboxModel;
+        if(mToolboxModel)
+        {
+            mIcon.setBackgroundResource(R.drawable.fan_item_icon_bg);
+            mIcon.setScaleType(ImageView.ScaleType.CENTER);
+        }
     }
 
     @Override

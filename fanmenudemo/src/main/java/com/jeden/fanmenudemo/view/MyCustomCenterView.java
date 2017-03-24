@@ -68,6 +68,9 @@ public class MyCustomCenterView extends CommonPositionView {
 
         mBgPaint = new Paint();
         mBgPaint.setStyle(Paint.Style.FILL);
+
+        mCenterY = getMeasuredHeight() - mCenterX;
+        mCenterX = isLeft() ? mCenterX : getMeasuredWidth() - mCenterX;
     }
 
     protected void afterOnMeasure() {
@@ -75,6 +78,9 @@ public class MyCustomCenterView extends CommonPositionView {
         LinearGradient lg = new LinearGradient(isLeft() ? (mCenterX + mCenterY) : (mCenterX - mCenterY), 0,
                 isLeft() ? 0 : getMeasuredWidth(), getMeasuredHeight(), mBgColorStart, mBgColorEnd, Shader.TileMode.REPEAT);
         mBgPaint.setShader(lg);
+
+        setPivotX(isLeft() ? 0 : getWidth());
+        setPivotY(getHeight());
     }
 
     @Override
@@ -115,6 +121,14 @@ public class MyCustomCenterView extends CommonPositionView {
         mLines[7] = offsetTextY - mTextSize;
 
         afterOnMeasure();
+    }
+
+    @Override
+    public void setPositionState(int state) {
+        super.setPositionState(state);
+
+        setPivotX(isLeft() ? 0 : getWidth());
+        setPivotY(getHeight());
     }
 
     @Override

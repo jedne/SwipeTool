@@ -100,6 +100,9 @@ public class MyCustomSelectTextLayout extends CommonPositionViewGroup {
         LinearGradient lg = new LinearGradient(isLeft() ? 2 * mRadius : getMeasuredWidth() - 2 * mRadius, 0,
                 isLeft() ? 0 : getMeasuredWidth(), getMeasuredHeight(), mColors, new float[]{0, 0.8f, 1}, Shader.TileMode.REPEAT);
         mPaint.setShader(lg);
+
+        setPivotX(isLeft() ? 0 : getWidth());
+        setPivotY(getHeight());
     }
 
     @Override
@@ -169,6 +172,14 @@ public class MyCustomSelectTextLayout extends CommonPositionViewGroup {
         super.onDraw(canvas);
 
         canvas.drawCircle(isLeft() ? 0 : getWidth(), getHeight(), mRadius, mPaint);
+    }
+
+    @Override
+    public void setPositionState(int state) {
+        super.setPositionState(state);
+
+        setPivotX(isLeft() ? 0 : getWidth());
+        setPivotY(getHeight());
     }
 
     /**

@@ -149,8 +149,7 @@ public class MyCustomFlowingView extends ImageView{
      * 打开大悬浮窗，同时关闭小悬浮窗。
      */
     private void openFanMenu() {
-        MyCustomMenuManager.showFanMenuView(getContext());
-        MyCustomMenuManager.removeFlowingView(getContext());
+        MyCustomMenuManager.showFanMenu(getContext());
     }
 
     /**

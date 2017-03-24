@@ -86,6 +86,10 @@ public class MyCustomMenuView extends CommonPositionViewGroup{
     @Override
     public void setPositionState(int state) {
         super.setPositionState(state);
+
+        setPivotX(isLeft() ? 0 : getWidth());
+        setPivotY(getHeight());
+
         int count = getChildCount();
         for(int i = 0; i < count; i++)
         {
@@ -101,6 +105,9 @@ public class MyCustomMenuView extends CommonPositionViewGroup{
         LinearGradient lg = new LinearGradient(isLeft() ? mOuterRadius : getMeasuredWidth() - mOuterRadius, 0,
                 isLeft() ? 0 : getMeasuredWidth(), getMeasuredHeight(), mColors, new float[]{0, 0.3f, 0.6f, 1}, Shader.TileMode.REPEAT);
         mPaint.setShader(lg);
+
+        setPivotX(isLeft() ? 0 : getWidth());
+        setPivotY(getHeight());
     }
 
     @Override
