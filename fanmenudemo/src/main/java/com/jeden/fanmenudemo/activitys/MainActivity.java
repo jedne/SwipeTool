@@ -1,13 +1,12 @@
 package com.jeden.fanmenudemo.activitys;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
 import com.jeden.fanmenudemo.R;
-import com.jeden.fanmenudemo.services.MyService;
+import com.jeden.fanmenudemo.services.FanMenuSDK;
 
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = MainActivity.class.getSimpleName();
@@ -21,13 +20,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void initView(){
-        Button btn = (Button)findViewById(R.id.myfan_show_button);
-        btn.setOnClickListener(new View.OnClickListener() {
+        Button btn1 = (Button)findViewById(R.id.myfan_show_button);
+        btn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                new MyCustomMenuManager(MainActivity.this, getWindowManager()).showFanMenu();
-                Intent intent = new Intent(MainActivity.this, MyService.class);
-                startService(intent);
+                FanMenuSDK.showFlowing();
+            }
+        });
+        Button btn2 = (Button)findViewById(R.id.myfan_hide_button);
+        btn2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                new MyCustomMenuManager(MainActivity.this, getWindowManager()).showFanMenu();
+                FanMenuSDK.hideFlowing();
             }
         });
     }

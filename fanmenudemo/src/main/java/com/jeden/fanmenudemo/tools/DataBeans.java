@@ -18,6 +18,11 @@ public class DataBeans {
     private static final String FANMENU_CONFIG_FLOW_Y = "fan_menu_config_flow_y";
     private static final String FANMENU_CONFIG_POSITION_STATE = "fan_menu_config_position_stage";
     private static final String FANMENU_CONFIG_SELECTTEXT_INDEX = "fan_menu_config_selecttext_index";
+
+    private static final String FANMENU_APPINFO_FAVORITE = "fan_menu_appinfo_favorite";
+    private static final String FANMENU_APPINFO_RECENTLY = "fan_menu_appinfo_recently";
+    private static final String FANMENU_APPINFO_TOOLBOX = "fan_menu_appinfo_toolbox";
+
     private static DataBeans mInstance = new DataBeans();
 
     private SharedPreferences mSp;
@@ -54,5 +59,41 @@ public class DataBeans {
         config.setSelectTextIndex(mSp.getInt(FANMENU_CONFIG_SELECTTEXT_INDEX, SelectCardState.CARD_STATE_RECENTLY));
 
         Log.v(TAG, "getConfig config:" + config);
+    }
+
+    public void saveFavorite(String favorite)
+    {
+        SharedPreferences.Editor ed = mSp.edit();
+        ed.putString(FANMENU_APPINFO_FAVORITE, favorite);
+        ed.commit();
+    }
+
+    public String getfavorite()
+    {
+        return mSp.getString(FANMENU_APPINFO_FAVORITE, "");
+    }
+
+    public void saveToolbox(String toolbox)
+    {
+        SharedPreferences.Editor ed = mSp.edit();
+        ed.putString(FANMENU_APPINFO_TOOLBOX, toolbox);
+        ed.commit();
+    }
+
+    public String getToolbox()
+    {
+        return mSp.getString(FANMENU_APPINFO_TOOLBOX, "");
+    }
+
+    public void saveRecently(String recently)
+    {
+        SharedPreferences.Editor ed = mSp.edit();
+        ed.putString(FANMENU_APPINFO_RECENTLY, recently);
+        ed.commit();
+    }
+
+    public String getRecently()
+    {
+        return mSp.getString(FANMENU_APPINFO_RECENTLY, "");
     }
 }

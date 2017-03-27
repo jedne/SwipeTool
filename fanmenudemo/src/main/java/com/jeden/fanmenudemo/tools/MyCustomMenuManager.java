@@ -3,6 +3,8 @@ package com.jeden.fanmenudemo.tools;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
+import android.os.Build;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -11,6 +13,7 @@ import android.view.WindowManager;
 import com.jeden.fanmenudemo.R;
 import com.jeden.fanmenudemo.view.MyCustomFanRootView;
 import com.jeden.fanmenudemo.view.MyCustomFlowingView;
+import com.jeden.fanmenudemo.view.MyCustomMenuDialog;
 import com.jeden.fanmenudemo.view.base.PositionState;
 
 
@@ -26,6 +29,7 @@ public class MyCustomMenuManager {
     private LayoutInflater mLayoutInflater;
     private MyCustomFanRootView mFanRootView;
     private MyCustomFlowingView mFlowingView;
+    private MyCustomMenuDialog mDialogView;
     private WindowManager.LayoutParams mFlowingViewLP;
 
     private static MyCustomMenuManager mInstance;
@@ -38,6 +42,7 @@ public class MyCustomMenuManager {
 
         initFlowingView();
         initFanMenuView();
+        initDialogView();
     }
 
     private void initFlowingView(){
@@ -56,6 +61,15 @@ public class MyCustomMenuManager {
             return;
         }
         mFanRootView = (MyCustomFanRootView)mLayoutInflater.inflate(R.layout.my_custom_fan_menu, null);
+    }
+
+    private void initDialogView()
+    {
+        if(mDialogView != null)
+        {
+            return;
+        }
+        mDialogView = (MyCustomMenuDialog) mLayoutInflater.inflate(R.layout.my_custom_dialog_layout, null);
     }
 
     private WindowManager.LayoutParams generateFanMenuLP(){
@@ -101,6 +115,24 @@ public class MyCustomMenuManager {
             lp.x = config.getFlowingX();
             lp.y = config.getFlowingY();
         }
+        return lp;
+    }
+
+    private WindowManager.LayoutParams generateDialogLP() {
+        DisplayMetrics dm = mContext.getResources().getDisplayMetrics();
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+            lp.type = WindowManager.LayoutParams.TYPE_PHONE;
+        } else {
+            lp.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
+        }
+        lp.format = PixelFormat.TRANSLUCENT;
+        lp.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
+        lp.gravity = Gravity.TOP;
+        lp.width = dm.widthPixels;
+        lp.height = dm.heightPixels;
+        lp.x = 0;
+        lp.y = 0;
         return lp;
     }
 
@@ -151,6 +183,23 @@ public class MyCustomMenuManager {
         }
     }
 
+    private void showDialog(int selectCard, MyCustomMenuDialog.DialogSubmitListener listener)
+    {
+        if(mDialogView.getParent() != null) {
+            Log.w(TAG, "dialog have showed");
+            return;
+        }
+        mDialogView.initView(selectCard, listener);
+        mWindowManager.addView(mDialogView, generateFanMenuLP());
+        mDialogView.showDialog();
+    }
+
+    private void removeDialog()
+    {
+        if(mWindowManager != null && mDialogView != null && mDialogView.getParent() != null){
+            mWindowManager.removeView(mDialogView);
+        }
+    }
 
     private synchronized static MyCustomMenuManager getInstance(Context context){
         if(mInstance == null){
@@ -182,5 +231,15 @@ public class MyCustomMenuManager {
     {
         getInstance(context).showFanMenu();
         getInstance(context).removeFlowing();
+    }
+
+    public static void closeDialog(Context context)
+    {
+        getInstance(context).removeDialog();
+    }
+
+    public static void showDialog(Context context, int selectCard, MyCustomMenuDialog.DialogSubmitListener listener)
+    {
+        getInstance(context).showDialog(selectCard, listener);
     }
 }

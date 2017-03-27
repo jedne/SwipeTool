@@ -24,4 +24,16 @@
     <dimen name="fanmenu_menu_item_half_width">30dp</dimen>
     <dimen name="fanmenu_menu_item_inner_radius">200dp</dimen>
     <dimen name="fanmenu_menu_item_outer_radius">281dp</dimen>
+
+    <dimen name="fanmenu_menu_dialog_title_text_size">18sp</dimen>
+    <dimen name="fanmenu_menu_dialog_title_left_margin">18dp</dimen>
+    <dimen name="fanmenu_menu_dialog_content_text_size">13sp</dimen>
+    <dimen name="fanmenu_menu_dialog_width">298dp</dimen>
+    <dimen name="fanmenu_menu_dialog_height">404dp</dimen>
+    <dimen name="fanmenu_menu_dialog_title_height">51dp</dimen>
+    <dimen name="fanmenu_menu_dialog_bottom_height">47dp</dimen>
+
+    <dimen name="fanmenu_menu_dialog_item_width">40dp</dimen>
+    <dimen name="fanmenu_menu_dialog_item_circle_width">16dp</dimen>
+    <dimen name="fanmenu_menu_dialog_item_circle_inner_width">14dp</dimen>
 </resources>

@@ -13,6 +13,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="显示扇形菜单"
+        android:text="显示悬浮按钮"
         android:id="@+id/myfan_show_button"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/myfan_show_button"
+        android:layout_centerHorizontal="true"
+        android:text="隐藏悬浮按钮"
+        android:id="@+id/myfan_hide_button"/>
 </RelativeLayout>

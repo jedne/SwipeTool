@@ -28,4 +28,12 @@
 
     <color name="fanmenu_item_icon_bg_color">#FF369AFA</color>
 
+    <color name="fanmenu_dialog_title_bg_color">#FFFFFFFF</color>
+    <color name="fanmenu_dialog_content_bg_color">#FFF5F6FA</color>
+    <color name="fanmenu_dialog_title_text_color">#FF008CFF</color>
+    <color name="fanmenu_dialog_cancel_text_color">#FF000000</color>
+    <color name="fanmenu_dialog_content_text_color">#FF535353</color>
+    <color name="fanmenu_dialog_bg_color">#7D212121</color>
+    <color name="fanmenu_dialog_item_circle_bg">#FF46BF73</color>
+
 </resources>

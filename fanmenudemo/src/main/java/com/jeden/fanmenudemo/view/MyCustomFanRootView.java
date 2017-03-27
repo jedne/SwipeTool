@@ -29,7 +29,7 @@ import com.jeden.fanmenudemo.view.base.SelectCardState;
 
 public class MyCustomFanRootView extends FrameLayout
 {
-    public static final String TAG = MyCustomFanRootView.class.getSimpleName();
+    private static final String TAG = MyCustomFanRootView.class.getSimpleName();
 
     private static final double MIN_SLID_DEGREE = 30;
     private static final int MIN_SLID_SPEED = 3500;
@@ -138,7 +138,6 @@ public class MyCustomFanRootView extends FrameLayout
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        Log.v(TAG, "onTouchEvent event:" + event.getAction());
         initVeloCityTracker(event);
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
@@ -307,7 +306,7 @@ public class MyCustomFanRootView extends FrameLayout
         }
 
         @Override
-        public void dragViewAndRefresh(float x, float y, AppInfo appInfo, boolean hidden) {
+        public void dragViewAndRefresh(float x, float y, AppInfo appInfo, boolean hidden, boolean isToolbox) {
             if(hidden)
             {
                 mMirrorView.setVisibility(GONE);
@@ -317,6 +316,7 @@ public class MyCustomFanRootView extends FrameLayout
             if(mMirrorView.getVisibility() == GONE)
             {
                 mMirrorView.setVisibility(View.VISIBLE);
+                mMirrorView.setToolboxModel(isToolbox);
                 mMirrorView.setItemIcon(appInfo.getAppIcon());
                 mMirrorView.setTitle(appInfo.getAppLabel());
                 mMirrorView.showDelBtn();
@@ -330,13 +330,21 @@ public class MyCustomFanRootView extends FrameLayout
         }
 
         @Override
-        public void addBtnClicked(View view, int selectCard) {
-
+        public void addBtnClicked(final View view, int selectCard) {
+            //TODO show dialog
+            MyCustomMenuManager.showDialog(getContext(), selectCard, new MyCustomMenuDialog.DialogSubmitListener() {
+                @Override
+                public void dialogSubmit() {
+                    ((MyCustomMenuLayout)view).refreshData();
+                }
+            });
+            Log.v(TAG, "addBtnClicked selectCard:" + selectCard);
         }
 
         @Override
         public void menuItemClicked(View view, AppInfo appInfo) {
-
+            // TODO clicked
+            Log.v(TAG, "menuItemClicked appInfo:" + appInfo);
         }
     };
 
@@ -509,25 +517,6 @@ public class MyCustomFanRootView extends FrameLayout
             public void onAnimationUpdate(ValueAnimator animation) {
                 float value = (float) animation.getAnimatedValue();
                 scaleChild(value);
-            }
-        });
-
-        va.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                MyCustomMenuManager.showFanMenu(getContext());
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
             }
         });
         va.start();

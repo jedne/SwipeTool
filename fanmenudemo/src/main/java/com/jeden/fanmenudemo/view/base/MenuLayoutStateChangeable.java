@@ -11,7 +11,7 @@ import com.jeden.fanmenudemo.bean.AppInfo;
 public interface MenuLayoutStateChangeable {
     void selectCardChange(int selectState);
     void longClickStateChange(View view, boolean isEditMode);
-    void dragViewAndRefresh(float x, float y, AppInfo appInfo, boolean hidden);
+    void dragViewAndRefresh(float x, float y, AppInfo appInfo, boolean hidden, boolean isToolbox);
     void addBtnClicked(View view, int selectCard);
     void menuItemClicked(View view, AppInfo appInfo);
 }

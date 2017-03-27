@@ -1,8 +1,5 @@
 package com.jeden.fanmenudemo.tools;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.jeden.fanmenudemo.view.base.PositionState;
 import com.jeden.fanmenudemo.view.base.SelectCardState;
 
@@ -10,7 +7,7 @@ import com.jeden.fanmenudemo.view.base.SelectCardState;
  * Created by jeden on 2017/3/15.
  */
 
-public class FanMenuConfig implements Parcelable {
+public class FanMenuConfig{
 
     private static FanMenuConfig mInstance;
 
@@ -37,36 +34,6 @@ public class FanMenuConfig implements Parcelable {
             return;
         }
         DataBeans.getInstance().saveConfig(mInstance);
-    }
-
-    public static final Creator<FanMenuConfig> CREATOR = new Creator<FanMenuConfig>() {
-        @Override
-        public FanMenuConfig createFromParcel(Parcel source) {
-            FanMenuConfig fmc = new FanMenuConfig();
-            fmc.flowingX = source.readInt();
-            fmc.flowingY = source.readInt();
-            fmc.positionState = source.readInt();
-            fmc.selectTextIndex = source.readInt();
-            return fmc;
-        }
-
-        @Override
-        public FanMenuConfig[] newArray(int size) {
-            return new FanMenuConfig[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(flowingX);
-        dest.writeInt(flowingY);
-        dest.writeInt(positionState);
-        dest.writeInt(selectTextIndex);
     }
 
     public int getFlowingX() {
