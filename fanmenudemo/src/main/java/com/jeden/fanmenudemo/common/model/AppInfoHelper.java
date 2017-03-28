@@ -1,4 +1,4 @@
-package com.jeden.fanmenudemo.tools;
+package com.jeden.fanmenudemo.common.model;
 
 import android.app.ActivityManager;
 import android.content.ComponentName;
@@ -8,6 +8,8 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.provider.AlarmClock;
+import android.provider.Settings;
 import android.util.Log;
 
 import com.jeden.fanmenudemo.R;
@@ -26,6 +28,23 @@ import java.util.List;
 public class AppInfoHelper
 {
     public static final String TAG = AppInfoHelper.class.getSimpleName();
+
+    public static final String TOOLBOX_PKG_SCREENSHOT = "#com.system.screenshot";
+    public static final String TOOLBOX_PKG_ALARM = "com.system.alarm";
+    public static final String TOOLBOX_PKG_BLUETOOTH = "#com.system.bluetooth";
+    public static final String TOOLBOX_PKG_CALCULATOR = "#com.system.calculator";
+    public static final String TOOLBOX_PKG_FLIGHT = "com.system.flight";
+    public static final String TOOLBOX_PKG_LOCKER = "#com.system.locker";
+    public static final String TOOLBOX_PKG_ROTATE = "#com.system.rotate";
+    public static final String TOOLBOX_PKG_WIFI = "#com.system.wifi";
+    public static final String TOOLBOX_PKG_CAMERA = "android.media.action.STILL_IMAGE_CAMERA";
+    public static final String TOOLBOX_PKG_SHAKE = "#com.system.shake";
+    public static final String TOOLBOX_PKG_SETTING = "com.system.setting";
+    public static final String TOOLBOX_PKG_LIGHTBULB = "#com.system.lightbulb";
+    public static final String TOOLBOX_PKG_ISWIP = "#com.system.iswip";
+    public static final String TOOLBOX_PKG_DATA = "#com.system.data";
+    public static final String TOOLBOX_PKG_CALENDAR = "com.android.calendar.LaunchActivity";
+    public static final String TOOLBOX_PKG_BRIGHT= "#com.system.bright";
 
     public static String generateAppInfoToStr(List<AppInfo> appInfos)
     {
@@ -164,122 +183,137 @@ public class AppInfoHelper
     public static void initToolbox(Context context, List<AppInfo> toolbox)
     {
         Resources rs = context.getResources();
-        toolbox.add(generateToolbox(rs, "screenshot"));
-        toolbox.add(generateToolbox(rs, "alarm"));
-        toolbox.add(generateToolbox(rs, "bluetooth"));
-        toolbox.add(generateToolbox(rs, "calculator"));
-        toolbox.add(generateToolbox(rs, "flight"));
-        toolbox.add(generateToolbox(rs, "locker"));
-        toolbox.add(generateToolbox(rs, "rotate"));
-        toolbox.add(generateToolbox(rs, "wifi"));
-        toolbox.add(generateToolbox(rs, "camera"));
-        toolbox.add(generateToolbox(rs, "shake"));
-        toolbox.add(generateToolbox(rs, "setting"));
-        toolbox.add(generateToolbox(rs, "lightbulb"));
-        toolbox.add(generateToolbox(rs, "iswip"));
-        toolbox.add(generateToolbox(rs, "data"));
-        toolbox.add(generateToolbox(rs, "calendar"));
-        toolbox.add(generateToolbox(rs, "bright"));
+        toolbox.add(generateToolbox(rs, TOOLBOX_PKG_SCREENSHOT));
+        toolbox.add(generateToolbox(rs, TOOLBOX_PKG_ALARM));
+        toolbox.add(generateToolbox(rs, TOOLBOX_PKG_BLUETOOTH));
+        toolbox.add(generateToolbox(rs, TOOLBOX_PKG_CALCULATOR));
+        toolbox.add(generateToolbox(rs, TOOLBOX_PKG_FLIGHT));
+        toolbox.add(generateToolbox(rs, TOOLBOX_PKG_LOCKER));
+        toolbox.add(generateToolbox(rs, TOOLBOX_PKG_ROTATE));
+        toolbox.add(generateToolbox(rs, TOOLBOX_PKG_WIFI));
+        toolbox.add(generateToolbox(rs, TOOLBOX_PKG_CAMERA));
+        toolbox.add(generateToolbox(rs, TOOLBOX_PKG_SHAKE));
+        toolbox.add(generateToolbox(rs, TOOLBOX_PKG_SETTING));
+        toolbox.add(generateToolbox(rs, TOOLBOX_PKG_LIGHTBULB));
+        toolbox.add(generateToolbox(rs, TOOLBOX_PKG_ISWIP));
+        toolbox.add(generateToolbox(rs, TOOLBOX_PKG_DATA));
+        toolbox.add(generateToolbox(rs, TOOLBOX_PKG_CALENDAR));
+        toolbox.add(generateToolbox(rs, TOOLBOX_PKG_BRIGHT));
     }
 
-    public static AppInfo generateToolbox(Resources rs, String name)
+    public static AppInfo generateToolbox(Resources rs, String pkgName)
     {
         AppInfo appInfo = new AppInfo();
-        if("screenshot".equals(name))
+        if(TOOLBOX_PKG_SCREENSHOT.equals(pkgName))
         {
             appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_screenshot));
-            appInfo.setPkgName("com.system.screenshot");
-            appInfo.setAppLabel("截屏");
+            appInfo.setPkgName(pkgName);
+            appInfo.setAppLabel(rs.getString(R.string.fanmenu_toolbox_screenshot_title));
         }
-        else if("alarm".equals(name))
+        else if(TOOLBOX_PKG_ALARM.equals(pkgName))
         {
             appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_alarm));
-            appInfo.setPkgName("com.system.alarm");
-            appInfo.setAppLabel("闹钟");
+            appInfo.setPkgName(pkgName);
+            appInfo.setAppLabel(rs.getString(R.string.fanmenu_toolbox_alarm_title));
+            Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM);
+            appInfo.setIntent(intent);
         }
-        else if("bluetooth".equals(name))
+        else if(TOOLBOX_PKG_BLUETOOTH.equals(pkgName))
         {
             appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_bluetooth));
-            appInfo.setPkgName("com.system.bluetooth");
-            appInfo.setAppLabel("蓝牙");
+            appInfo.setPkgName(pkgName);
+            appInfo.setAppLabel(rs.getString(R.string.fanmenu_toolbox_bluetooth_title));
         }
-        else if("calculator".equals(name))
+        else if(TOOLBOX_PKG_CALCULATOR.equals(pkgName))
         {
             appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_calculator));
-            appInfo.setPkgName("com.system.calculator");
-            appInfo.setAppLabel("计算器");
+            appInfo.setPkgName(pkgName);
+            appInfo.setAppLabel(rs.getString(R.string.fanmenu_toolbox_calculator_title));
         }
-        else if("flight".equals(name))
+        else if(TOOLBOX_PKG_FLIGHT.equals(pkgName))
         {
             appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_flight));
-            appInfo.setPkgName("com.system.flight");
-            appInfo.setAppLabel("飞行模式");
+            appInfo.setPkgName(pkgName);
+            appInfo.setAppLabel(rs.getString(R.string.fanmenu_toolbox_flight_title));
+            Intent intent = new Intent(Settings.ACTION_AIRPLANE_MODE_SETTINGS);
+            appInfo.setIntent(intent);
         }
-        else if("locker".equals(name))
+        else if(TOOLBOX_PKG_LOCKER.equals(pkgName))
         {
             appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_locker));
-            appInfo.setPkgName("com.system.locker");
-            appInfo.setAppLabel("锁屏");
+            appInfo.setPkgName(pkgName);
+            appInfo.setAppLabel(rs.getString(R.string.fanmenu_toolbox_locker_title));
         }
-        else if("rotate".equals(name))
+        else if(TOOLBOX_PKG_ROTATE.equals(pkgName))
         {
             appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_rotate));
-            appInfo.setPkgName("com.system.rotate");
-            appInfo.setAppLabel("自动旋转");
+            appInfo.setPkgName(pkgName);
+            appInfo.setAppLabel(rs.getString(R.string.fanmenu_toolbox_rotate_title));
         }
-        else if("wifi".equals(name))
+        else if(TOOLBOX_PKG_WIFI.equals(pkgName))
         {
             appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_wifi));
-            appInfo.setPkgName("com.system.wifi");
-            appInfo.setAppLabel("WIFI");
+            appInfo.setPkgName(pkgName);
+            appInfo.setAppLabel(rs.getString(R.string.fanmenu_toolbox_wifi_title));
         }
-        else if("camera".equals(name))
+        else if(TOOLBOX_PKG_CAMERA.equals(pkgName))
         {
             appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_camera));
-            appInfo.setPkgName("com.system.camera");
-            appInfo.setAppLabel("照相机");
+            appInfo.setPkgName(pkgName);
+            appInfo.setAppLabel(rs.getString(R.string.fanmenu_toolbox_camera_title));
+
+            Intent intent = new Intent("android.media.action.STILL_IMAGE_CAMERA");
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            appInfo.setIntent(intent);
         }
-        else if("shake".equals(name))
+        else if(TOOLBOX_PKG_SHAKE.equals(pkgName))
         {
             appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_shake));
-            appInfo.setPkgName("com.system.shake");
-            appInfo.setAppLabel("震动");
+            appInfo.setPkgName(pkgName);
+            appInfo.setAppLabel(rs.getString(R.string.fanmenu_toolbox_shake_title));
         }
-        else if("setting".equals(name))
+        else if(TOOLBOX_PKG_SETTING.equals(pkgName))
         {
             appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_setting));
-            appInfo.setPkgName("com.system.setting");
-            appInfo.setAppLabel("设置");
+            appInfo.setPkgName(pkgName);
+            appInfo.setAppLabel(rs.getString(R.string.fanmenu_toolbox_setting_title));
+
+            Intent intent = new Intent(Settings.ACTION_SETTINGS);
+            appInfo.setIntent(intent);
         }
-        else if("lightbulb".equals(name))
+        else if(TOOLBOX_PKG_LIGHTBULB.equals(pkgName))
         {
             appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_lightbulb));
-            appInfo.setPkgName("com.system.lightbulb");
-            appInfo.setAppLabel("手电筒");
+            appInfo.setPkgName(pkgName);
+            appInfo.setAppLabel(rs.getString(R.string.fanmenu_toolbox_lightbulb_title));
         }
-        else if("iswip".equals(name))
+        else if(TOOLBOX_PKG_ISWIP.equals(pkgName))
         {
             appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_iswip));
-            appInfo.setPkgName("com.system.iswip");
-            appInfo.setAppLabel("菜单设置");
+            appInfo.setPkgName(pkgName);
+            appInfo.setAppLabel(rs.getString(R.string.fanmenu_toolbox_iswip_title));
         }
-        else if("data".equals(name))
+        else if(TOOLBOX_PKG_DATA.equals(pkgName))
         {
             appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_data));
-            appInfo.setPkgName("com.system.data");
-            appInfo.setAppLabel("移动数据");
+            appInfo.setPkgName(pkgName);
+            appInfo.setAppLabel(rs.getString(R.string.fanmenu_toolbox_data_title));
         }
-        else if("calendar".equals(name))
+        else if(TOOLBOX_PKG_CALENDAR.equals(pkgName))
         {
             appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_calendar));
-            appInfo.setPkgName("com.system.calendar");
-            appInfo.setAppLabel("日历");
+            appInfo.setPkgName(pkgName);
+            appInfo.setAppLabel(rs.getString(R.string.fanmenu_toolbox_calendar_title));
+
+            Intent intent = new Intent();
+            intent.setComponent((new ComponentName("com.android.calendar", pkgName)));
+            appInfo.setIntent(intent);
         }
-        else if("bright".equals(name))
+        else if(TOOLBOX_PKG_BRIGHT.equals(pkgName))
         {
             appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_bright));
-            appInfo.setPkgName("com.system.bright");
-            appInfo.setAppLabel("屏幕亮度");
+            appInfo.setPkgName(pkgName);
+            appInfo.setAppLabel(rs.getString(R.string.fanmenu_toolbox_bright_title));
         }
 
         return appInfo;
@@ -331,6 +365,10 @@ public class AppInfoHelper
             {
                 Intent intent = info.baseIntent;
                 ResolveInfo resolveInfo = pm.resolveActivity(intent, 0);
+                if(resolveInfo.activityInfo.packageName.contains(".launcher"))
+                {
+                    break;
+                }
                 appInfo = new AppInfo();
                 appInfo.setAppLabel((String) resolveInfo.loadLabel(pm));
                 appInfo.setPkgName(resolveInfo.activityInfo.packageName);

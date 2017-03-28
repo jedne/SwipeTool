@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid
+        android:color="@color/fanmenu_toast_bg_color"/>
+    <corners
+        android:topLeftRadius="@dimen/fanmenu_menu_toast_radius"
+        android:topRightRadius="@dimen/fanmenu_menu_toast_radius"
+        android:bottomLeftRadius="@dimen/fanmenu_menu_toast_radius"
+        android:bottomRightRadius="@dimen/fanmenu_menu_toast_radius"/>
+</shape>

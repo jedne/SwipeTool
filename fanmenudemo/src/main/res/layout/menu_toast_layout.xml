@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.jeden.fanmenudemo.view.FanToast xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipChildren="false">
+    <RelativeLayout
+        android:id="@+id/fan_toast_layout"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="@dimen/fanmenu_menu_toast_height"
+        android:layout_height="@dimen/fanmenu_menu_toast_height"
+        android:layout_marginBottom="@dimen/fanmenu_menu_toast_height"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/fan_toast_bg">
+        <TextView
+            android:id="@+id/fan_toast_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/fanmenu_toast_text_color"
+            android:maxLines="1"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="@dimen/fanmenu_menu_toast_radius"
+            android:textSize="@dimen/fanmenu_menu_toast_text_size"/>
+    </RelativeLayout>
+</com.jeden.fanmenudemo.view.FanToast>

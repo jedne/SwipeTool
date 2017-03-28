@@ -10,10 +10,10 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 
-import com.jeden.fanmenudemo.tools.ContentProvider;
-import com.jeden.fanmenudemo.tools.DataBeans;
-import com.jeden.fanmenudemo.tools.FanMenuConfig;
-import com.jeden.fanmenudemo.tools.MyCustomMenuManager;
+import com.jeden.fanmenudemo.common.model.ContentProvider;
+import com.jeden.fanmenudemo.common.model.DataBeans;
+import com.jeden.fanmenudemo.common.model.FanMenuConfig;
+import com.jeden.fanmenudemo.common.MyCustomMenuManager;
 
 public class MyService extends Service {
     private static final String TAG = MyService.class.getSimpleName();

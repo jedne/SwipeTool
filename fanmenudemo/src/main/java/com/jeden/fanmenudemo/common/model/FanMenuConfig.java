@@ -1,4 +1,4 @@
-package com.jeden.fanmenudemo.tools;
+package com.jeden.fanmenudemo.common.model;
 
 import com.jeden.fanmenudemo.view.base.PositionState;
 import com.jeden.fanmenudemo.view.base.SelectCardState;
@@ -9,7 +9,7 @@ import com.jeden.fanmenudemo.view.base.SelectCardState;
 
 public class FanMenuConfig{
 
-    private static FanMenuConfig mInstance;
+    private volatile static FanMenuConfig mInstance;
 
     private int flowingX = 0;
     private int flowingY = 0;
@@ -20,11 +20,17 @@ public class FanMenuConfig{
 
     public static FanMenuConfig getMenuConfig()
     {
-        if(mInstance == null) {
-            mInstance = new FanMenuConfig();
-            DataBeans.getInstance().getConfig(mInstance);
+        if(mInstance == null)
+        {
+            newInstance();
         }
         return mInstance;
+    }
+
+    private static synchronized void newInstance()
+    {
+        mInstance = new FanMenuConfig();
+        DataBeans.getInstance().getConfig(mInstance);
     }
 
     public static void saveMenuConfig()

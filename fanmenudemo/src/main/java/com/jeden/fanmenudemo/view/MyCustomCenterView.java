@@ -9,7 +9,7 @@ import android.graphics.Shader;
 import android.util.AttributeSet;
 
 import com.jeden.fanmenudemo.R;
-import com.jeden.fanmenudemo.tools.FanMenuViewTools;
+import com.jeden.fanmenudemo.common.FanMenuViewTools;
 import com.jeden.fanmenudemo.view.base.CommonPositionView;
 
 /**

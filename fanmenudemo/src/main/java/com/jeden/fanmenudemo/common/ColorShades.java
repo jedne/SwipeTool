@@ -1,4 +1,4 @@
-package com.jeden.fanmenudemo.tools;
+package com.jeden.fanmenudemo.common;
 
 import android.graphics.Color;
 

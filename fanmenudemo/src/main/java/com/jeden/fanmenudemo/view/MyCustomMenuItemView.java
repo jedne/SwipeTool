@@ -9,12 +9,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jeden.fanmenudemo.R;
+import com.jeden.fanmenudemo.bean.AppInfo;
+import com.jeden.fanmenudemo.common.tools.SwipeTools;
+import com.jeden.fanmenudemo.common.tools.SwipeView;
+import com.jeden.fanmenudemo.common.tools.ToolboxHelper;
 
 /**
  * Created by Administrator on 2017/3/12.
  */
 
-public class MyCustomMenuItemView extends RelativeLayout {
+public class MyCustomMenuItemView extends RelativeLayout implements SwipeView{
 
     private ImageView mDelIcon;
     private ImageView mIcon;
@@ -78,5 +82,32 @@ public class MyCustomMenuItemView extends RelativeLayout {
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
+    }
+
+    @Override
+    public void setTag(Object tag) {
+        super.setTag(tag);
+        if(tag instanceof AppInfo)
+        {
+            AppInfo appInfo = (AppInfo)tag;
+            if(appInfo.getIntent() == null)
+            {
+                SwipeTools tools = ToolboxHelper.checkSwipeTools(getContext(), appInfo);
+                if(tools != null)
+                {
+                    tools.bindSwipeView(getContext(), this);
+                }
+            }
+        }
+    }
+
+    @Override
+    public ImageView getIconView() {
+        return mIcon;
+    }
+
+    @Override
+    public TextView getTitleView() {
+        return mTitle;
     }
 }

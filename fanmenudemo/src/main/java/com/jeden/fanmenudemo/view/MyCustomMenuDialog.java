@@ -15,12 +15,11 @@ import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jeden.fanmenudemo.R;
 import com.jeden.fanmenudemo.bean.AppInfo;
-import com.jeden.fanmenudemo.tools.ContentProvider;
-import com.jeden.fanmenudemo.tools.MyCustomMenuManager;
+import com.jeden.fanmenudemo.common.MyCustomMenuManager;
+import com.jeden.fanmenudemo.common.model.ContentProvider;
 import com.jeden.fanmenudemo.view.base.SelectCardState;
 
 import java.util.ArrayList;
@@ -168,7 +167,8 @@ public class MyCustomMenuDialog extends RelativeLayout implements View.OnClickLi
                 public boolean selectChangeable(View view, boolean isSelect) {
                     if(isSelect && mTempSelect.size() >= 9)
                     {
-                        Toast.makeText(getContext(), "最多只能选9个", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getContext(), "最多只能选9个", Toast.LENGTH_SHORT).show();
+                        MyCustomMenuManager.showToast(getContext(), "最多只能选9个");
                         return false;
                     }
                     AppInfo appInfo = (AppInfo) view.getTag();

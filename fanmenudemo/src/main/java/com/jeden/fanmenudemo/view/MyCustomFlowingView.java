@@ -7,7 +7,7 @@ import android.view.MotionEvent;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
-import com.jeden.fanmenudemo.tools.MyCustomMenuManager;
+import com.jeden.fanmenudemo.common.MyCustomMenuManager;
 
 import java.lang.reflect.Field;
 

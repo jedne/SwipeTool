@@ -12,8 +12,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.jeden.fanmenudemo.R;
-import com.jeden.fanmenudemo.tools.ColorShades;
-import com.jeden.fanmenudemo.tools.FanMenuViewTools;
+import com.jeden.fanmenudemo.common.ColorShades;
+import com.jeden.fanmenudemo.common.FanMenuViewTools;
 import com.jeden.fanmenudemo.view.base.CommonPositionViewGroup;
 import com.jeden.fanmenudemo.view.base.SelectCardState;
 

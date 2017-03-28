@@ -1,4 +1,4 @@
-package com.jeden.fanmenudemo.tools;
+package com.jeden.fanmenudemo.common.model;
 
 import android.content.Context;
 
@@ -7,15 +7,13 @@ import com.jeden.fanmenudemo.bean.AppInfo;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.jeden.fanmenudemo.tools.AppInfoHelper.generateAppInfoToStr;
-
 /**
  * Created by jeden on 2017/3/15.
  */
 
 public class ContentProvider {
 
-    private static ContentProvider mInstance;
+    private static ContentProvider mInstance = new ContentProvider();
     private List<AppInfo> mAllApps = new ArrayList<>();
     private List<AppInfo> mAllToolBox = new ArrayList<>();
     private List<AppInfo> mFavorite = new ArrayList<>();
@@ -25,16 +23,11 @@ public class ContentProvider {
     private ContentProvider(){
     }
     public static ContentProvider getInstance(){
-        if(mInstance == null)
-        {
-            mInstance = new ContentProvider();
-        }
         return mInstance;
     }
 
     public static void initContentProvider(Context context)
     {
-        getInstance();
         mInstance.initData(context);
     }
 
@@ -76,19 +69,19 @@ public class ContentProvider {
 
     public void saveFavorite()
     {
-        String str = generateAppInfoToStr(mFavorite);
+        String str = AppInfoHelper.generateAppInfoToStr(mFavorite);
         DataBeans.getInstance().saveFavorite(str);
     }
 
     public void saveToolbox()
     {
-        String str = generateAppInfoToStr(mToolBox);
+        String str = AppInfoHelper.generateAppInfoToStr(mToolBox);
         DataBeans.getInstance().saveToolbox(str);
     }
 
     public void saveRecently()
     {
-        String str = generateAppInfoToStr(mRecently);
+        String str = AppInfoHelper.generateAppInfoToStr(mRecently);
         DataBeans.getInstance().saveRecently(str);
     }
 }

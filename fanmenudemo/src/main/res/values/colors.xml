@@ -36,4 +36,7 @@
     <color name="fanmenu_dialog_bg_color">#7D212121</color>
     <color name="fanmenu_dialog_item_circle_bg">#FF46BF73</color>
 
+    <color name="fanmenu_toast_text_color">#FFFFFFFF</color>
+    <color name="fanmenu_toast_bg_color">#e833312e</color>
+
 </resources>

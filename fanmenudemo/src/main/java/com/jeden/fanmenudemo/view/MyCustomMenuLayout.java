@@ -21,8 +21,8 @@ import android.widget.ImageView;
 
 import com.jeden.fanmenudemo.R;
 import com.jeden.fanmenudemo.bean.AppInfo;
-import com.jeden.fanmenudemo.tools.ContentProvider;
-import com.jeden.fanmenudemo.tools.FanMenuViewTools;
+import com.jeden.fanmenudemo.common.model.ContentProvider;
+import com.jeden.fanmenudemo.common.FanMenuViewTools;
 import com.jeden.fanmenudemo.view.base.CommonPositionViewGroup;
 import com.jeden.fanmenudemo.view.base.SelectCardState;
 
@@ -95,7 +95,7 @@ public class MyCustomMenuLayout extends CommonPositionViewGroup{
         mItemInnerRadius = rs.getDimensionPixelSize(R.dimen.fanmenu_menu_item_inner_radius);
         mItemOuterRadius = rs.getDimensionPixelSize(R.dimen.fanmenu_menu_item_outer_radius);
 
-        mTouchSlop = FanMenuViewTools.dip2px(context, 4);
+        mTouchSlop = FanMenuViewTools.dip2px(context, 5);
     }
 
     public void addAllItemView()
@@ -312,7 +312,6 @@ public class MyCustomMenuLayout extends CommonPositionViewGroup{
                         else if(!mIsEditModel)
                         {
                             handler.removeCallbacks(mLongClickRunnable);
-
                             btnClicked(v.getTag());
                         }
                     }

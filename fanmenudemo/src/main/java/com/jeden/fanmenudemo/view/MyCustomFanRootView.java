@@ -3,6 +3,7 @@ package com.jeden.fanmenudemo.view;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,9 +17,11 @@ import android.widget.FrameLayout;
 
 import com.jeden.fanmenudemo.R;
 import com.jeden.fanmenudemo.bean.AppInfo;
-import com.jeden.fanmenudemo.tools.FanMenuConfig;
-import com.jeden.fanmenudemo.tools.FanMenuViewTools;
-import com.jeden.fanmenudemo.tools.MyCustomMenuManager;
+import com.jeden.fanmenudemo.common.model.FanMenuConfig;
+import com.jeden.fanmenudemo.common.FanMenuViewTools;
+import com.jeden.fanmenudemo.common.MyCustomMenuManager;
+import com.jeden.fanmenudemo.common.tools.SwipeTools;
+import com.jeden.fanmenudemo.common.tools.ToolboxHelper;
 import com.jeden.fanmenudemo.view.base.MenuLayoutStateChangeable;
 import com.jeden.fanmenudemo.view.base.PositionState;
 import com.jeden.fanmenudemo.view.base.SelectCardState;
@@ -331,22 +334,46 @@ public class MyCustomFanRootView extends FrameLayout
 
         @Override
         public void addBtnClicked(final View view, int selectCard) {
-            //TODO show dialog
             MyCustomMenuManager.showDialog(getContext(), selectCard, new MyCustomMenuDialog.DialogSubmitListener() {
                 @Override
                 public void dialogSubmit() {
                     ((MyCustomMenuLayout)view).refreshData();
                 }
             });
-            Log.v(TAG, "addBtnClicked selectCard:" + selectCard);
         }
 
         @Override
         public void menuItemClicked(View view, AppInfo appInfo) {
-            // TODO clicked
             Log.v(TAG, "menuItemClicked appInfo:" + appInfo);
+            if(switchOrStartActivity(view, appInfo))
+            {
+                MyCustomMenuManager.closeFanMenu(getContext());
+            }
         }
     };
+
+    public boolean switchOrStartActivity(View view, AppInfo appInfo)
+    {
+        if(appInfo == null)
+        {
+            return false;
+        }
+
+        Intent intent = appInfo.getIntent();
+        if(intent != null)
+        {
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            getContext().startActivity(intent);
+            return true;
+        }
+
+        SwipeTools tools = ToolboxHelper.checkSwipeTools(getContext(), appInfo);
+        if(tools != null)
+        {
+            return tools.changeStateWithResult(getContext());
+        }
+        return false;
+    }
 
     public void scrollToState(final int fromeState, final int toState, float offset)
     {
