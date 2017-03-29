@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <size
+        android:width="@dimen/fan_menu_item_icon_width"
+        android:height="@dimen/fan_menu_item_icon_width"/>
+    <solid
+        android:color="@color/fan_menu_item_icon_bg_color"/>
+</shape>

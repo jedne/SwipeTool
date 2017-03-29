@@ -1,0 +1,52 @@
+<resources>
+    <string name="app_name">FanMenu</string>
+
+    <string name="fan_menu_select_text_recently">最近使用</string>
+    <string name="fan_menu_select_text_toolbox">快捷开关</string>
+    <string name="fan_menu_select_text_favorite">常用应用</string>
+
+    <string name="fan_menu_dialog_toolbox_title">已选工具</string>
+    <string name="fan_menu_dialog_favorite_title">已选应用</string>
+    <string name="fan_menu_dialog_cancel_text">取消</string>
+    <string name="fan_menu_dialog_submit_text">确定</string>
+
+    <string name="fan_menu_toolbox_screenshot_title">截屏</string>
+    <string name="fan_menu_toolbox_alarm_title">闹钟</string>
+    <string name="fan_menu_toolbox_bluetooth_title">蓝牙</string>
+    <string name="fan_menu_toolbox_calculator_title">计算器</string>
+    <string name="fan_menu_toolbox_flight_title">飞行模式</string>
+    <string name="fan_menu_toolbox_locker_title">锁屏</string>
+    <string name="fan_menu_toolbox_rotate_title">自动旋转</string>
+    <string name="fan_menu_toolbox_wifi_title">WIFI</string>
+    <string name="fan_menu_toolbox_camera_title">照相机</string>
+    <string name="fan_menu_toolbox_audio_title">震动</string>
+    <string name="fan_menu_toolbox_setting_title">设置</string>
+    <string name="fan_menu_toolbox_lightbulb_title">手电筒</string>
+    <string name="fan_menu_toolbox_iswip_title">菜单设置</string>
+    <string name="fan_menu_toolbox_data_title">移动数据</string>
+    <string name="fan_menu_toolbox_calendar_title">日历</string>
+    <string name="fan_menu_toolbox_bright_title">屏幕亮度</string>
+
+    <string name="fan_menu_toolbox_audio_normal">响铃模式</string>
+    <string name="fan_menu_toolbox_audio_silent">静音模式</string>
+    <string name="fan_menu_toolbox_audio_vibrate">震动模式</string>
+
+    <string name="fan_menu_toolbox_auto_locker_0">无操作30s后锁屏</string>
+    <string name="fan_menu_toolbox_auto_locker_1">无操作1m后锁屏</string>
+    <string name="fan_menu_toolbox_auto_locker_2">无操作2m后锁屏</string>
+    <string name="fan_menu_toolbox_auto_locker_3">无操作5m后锁屏</string>
+    <string name="fan_menu_toolbox_auto_locker_4">无操作10m后锁屏</string>
+    <string name="fan_menu_toolbox_auto_locker_5">不锁屏</string>
+
+    <string name="fan_menu_toolbox_bluetooth_on">蓝牙已开启</string>
+    <string name="fan_menu_toolbox_bluetooth_off">蓝牙已关闭</string>
+
+    <string name="fan_menu_toolbox_data_on">移动数据已开启</string>
+    <string name="fan_menu_toolbox_data_off">移动数据已关闭</string>
+
+    <string name="fan_menu_toolbox_rotate_on">自动旋转已开启</string>
+    <string name="fan_menu_toolbox_rotate_off">自动旋转已关闭</string>
+
+    <string name="fan_menu_toolbox_wifi_on">WIFI已开启</string>
+    <string name="fan_menu_toolbox_wifi_off">WIFI已关闭</string>
+</resources>
