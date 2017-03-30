@@ -13,9 +13,7 @@
             android:layout_height="@dimen/fan_menu_item_icon_width"
             android:layout_marginTop="5dp"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/fan_item_icon_bluetooth"
-            android:scaleType="fitXY"
-            android:background="@null"/>
+            android:background="@drawable/fan_item_icon_bluetooth_on"/>
 
         <TextView
             android:id="@+id/fan_item_title"
@@ -26,7 +24,7 @@
             android:layout_marginTop="1dp"
             android:gravity="center"
             android:maxLines="1"
-            android:textColor="@color/fan_menu_center_text_color"
+            android:textColor="@color/fan_menu_common_white_color"
             android:textSize="@dimen/fan_menu_item_title_size" />
 
         <ImageView

@@ -14,21 +14,18 @@ public class SwipeAudio extends SwipeTools {
     private volatile static SwipeAudio mInstance;
     private AudioManager mAudioManager;
 
-    private SwipeAudio(Context context)
-    {
+    private SwipeAudio(Context context) {
         mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
     }
-    public static SwipeAudio getInstance(Context context)
-    {
-        if(mInstance == null)
-        {
+
+    public static SwipeAudio getInstance(Context context) {
+        if (mInstance == null) {
             newInstance(context);
         }
         return mInstance;
     }
 
-    private static synchronized void newInstance(Context context)
-    {
+    private static synchronized void newInstance(Context context) {
         mInstance = new SwipeAudio(context);
     }
 
@@ -54,11 +51,9 @@ public class SwipeAudio extends SwipeTools {
         changeViewState(context);
     }
 
-    private void changeViewState(Context context)
-    {
+    private void changeViewState(Context context) {
         SwipeView view = mSwipeView.get();
-        if(view == null)
-        {
+        if (view == null) {
             return;
         }
 
@@ -66,16 +61,19 @@ public class SwipeAudio extends SwipeTools {
 
         switch (getState()) {
             case AudioManager.RINGER_MODE_SILENT:
-                // TODO
-                showToast(context, rs.getString(R.string.fan_menu_toolbox_audio_silent));
+                view.getIconView().setBackgroundResource(R.drawable.fan_item_icon_audio_3);
+                view.getTitleView().setText(R.string.fan_menu_toolbox_audio_silent);
+                showToast(context, rs.getString(R.string.fan_menu_toolbox_audio_silent_toast));
                 break;
             case AudioManager.RINGER_MODE_NORMAL:
-                showToast(context, rs.getString(R.string.fan_menu_toolbox_audio_normal));
-                // TODO
+                view.getIconView().setBackgroundResource(R.drawable.fan_item_icon_audio_2);
+                view.getTitleView().setText(R.string.fan_menu_toolbox_audio_normal);
+                showToast(context, rs.getString(R.string.fan_menu_toolbox_audio_normal_toast));
                 break;
             case AudioManager.RINGER_MODE_VIBRATE:
-                showToast(context, rs.getString(R.string.fan_menu_toolbox_audio_vibrate));
-                // TODO
+                view.getIconView().setBackgroundResource(R.drawable.fan_item_icon_audio_1);
+                view.getTitleView().setText(R.string.fan_menu_toolbox_audio_vibrate);
+                showToast(context, rs.getString(R.string.fan_menu_toolbox_audio_vibrate_toast));
                 break;
         }
     }

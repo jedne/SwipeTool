@@ -21,17 +21,14 @@ public class SwipeRotate extends SwipeTools {
     private SwipeRotate(Context context) {
     }
 
-    public static SwipeRotate getInstance(Context context)
-    {
-        if(mInstance == null)
-        {
+    public static SwipeRotate getInstance(Context context) {
+        if (mInstance == null) {
             newInstance(context);
         }
         return mInstance;
     }
 
-    private static synchronized void newInstance(Context context)
-    {
+    private static synchronized void newInstance(Context context) {
         mInstance = new SwipeRotate(context);
     }
 
@@ -46,17 +43,18 @@ public class SwipeRotate extends SwipeTools {
         changeViewState(context);
     }
 
-    private void changeViewState(Context context)
-    {
-        Resources rs = context.getResources();
-        if(getRotationStatus(context) == 1)
-        {
-            //TODO
-            showToast(context, rs.getString(R.string.fan_menu_toolbox_rotate_on));
+    private void changeViewState(Context context) {
+        SwipeView view = mSwipeView.get();
+        if (view == null) {
+            return;
         }
-        else
-        {
-            //TODO
+
+        Resources rs = context.getResources();
+        if (getRotationStatus(context) == 1) {
+            view.getIconView().setBackgroundResource(R.drawable.fan_item_icon_rotate_on);
+            showToast(context, rs.getString(R.string.fan_menu_toolbox_rotate_on));
+        } else {
+            view.getIconView().setBackgroundResource(R.drawable.fan_item_icon_rotate_off);
             showToast(context, rs.getString(R.string.fan_menu_toolbox_rotate_off));
         }
     }

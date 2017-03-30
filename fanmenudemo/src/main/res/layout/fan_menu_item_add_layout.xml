@@ -26,7 +26,7 @@
             android:layout_marginTop="1dp"
             android:gravity="center"
             android:maxLines="1"
-            android:textColor="@color/fan_menu_center_text_color"
+            android:textColor="@color/fan_menu_common_white_color"
             android:textSize="@dimen/fan_menu_item_title_size" />
 
     </RelativeLayout>

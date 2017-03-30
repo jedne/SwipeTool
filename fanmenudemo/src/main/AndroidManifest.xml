@@ -184,17 +184,22 @@
 
         <activity
             android:name=".common.screenshot.ScreenShotActivity"
-            android:process="com.jeden.screenshot"
             android:launchMode="singleInstance"
-            android:theme="@style/ScreenShotTransparent"/>
+            android:process="com.jeden.screenshot"
+            android:theme="@style/ScreenShotTransparent" />
 
         <service
             android:name=".common.screenshot.ScreenShotService"
             android:enabled="true"
-            android:process="com.jeden.screenshot"
-            android:exported="true">
+            android:exported="true"
+            android:process="com.jeden.screenshot"></service>
 
-        </service>
+        <activity
+            android:name=".activitys.FanMenuSettingActivity"
+            android:launchMode="singleInstance"
+            android:theme="@style/FanMenuTheme">
+
+        </activity>
     </application>
 
 </manifest>

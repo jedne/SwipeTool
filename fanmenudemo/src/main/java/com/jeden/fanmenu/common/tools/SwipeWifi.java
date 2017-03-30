@@ -13,21 +13,19 @@ import com.jeden.fanmenu.R;
 public class SwipeWifi extends SwipeTools {
     private volatile static SwipeWifi mInstance;
     private WifiManager mWifi;
-    private SwipeWifi(Context context)
-    {
+
+    private SwipeWifi(Context context) {
         mWifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
     }
-    public static SwipeWifi getInstance(Context context)
-    {
-        if(mInstance == null)
-        {
+
+    public static SwipeWifi getInstance(Context context) {
+        if (mInstance == null) {
             newInstance(context);
         }
         return mInstance;
     }
 
-    private static synchronized void newInstance(Context context)
-    {
+    private static synchronized void newInstance(Context context) {
         mInstance = new SwipeWifi(context);
     }
 
@@ -38,33 +36,31 @@ public class SwipeWifi extends SwipeTools {
 
     @Override
     public void changeState(Context context) {
-        if(mWifi.isWifiEnabled())
-        {
+        if (mWifi.isWifiEnabled()) {
             mWifi.setWifiEnabled(false);
             changeViewState(context, false);
-        }
-        else
-        {
+        } else {
             mWifi.setWifiEnabled(true);
             changeViewState(context, true);
         }
     }
 
-    private void changeViewState(Context context)
-    {
+    private void changeViewState(Context context) {
         changeViewState(context, mWifi.isWifiEnabled());
     }
 
-    private void changeViewState(Context context, boolean isEnable){
-        Resources rs = context.getResources();
-        if(isEnable)
-        {
-            //TODO
-            showToast(context, rs.getString(R.string.fan_menu_toolbox_wifi_on));
+    private void changeViewState(Context context, boolean isEnable) {
+        SwipeView view = mSwipeView.get();
+        if (view == null) {
+            return;
         }
-        else
-        {
-            //TODO
+
+        Resources rs = context.getResources();
+        if (isEnable) {
+            view.getIconView().setBackgroundResource(R.drawable.fan_item_icon_wifi_on);
+            showToast(context, rs.getString(R.string.fan_menu_toolbox_wifi_on));
+        } else {
+            view.getIconView().setBackgroundResource(R.drawable.fan_item_icon_wifi_off);
             showToast(context, rs.getString(R.string.fan_menu_toolbox_wifi_off));
         }
     }

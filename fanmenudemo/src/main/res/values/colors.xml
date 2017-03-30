@@ -4,16 +4,20 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
-    <color name="fan_menu_background_color">#B0000000</color>
+    <!-- common color -->
     <color name="fan_menu_common_transparent_color">#00000000</color>
+    <color name="fan_menu_common_white_color">#FFFFFFFF</color>
+    <color name="fan_menu_common_black_color">#FF000000</color>
+    <color name="fan_menu_common_title_blue_color">#FF008CFF</color>
+    <color name="fan_menu_common_content_text_color">#FF535353</color>
 
-    <color name="fan_menu_center_text_color">#FFFFFF</color>
+    <!-- custom color-->
+    <color name="fan_menu_background_color">#B0000000</color>
+
     <color name="fan_menu_center_bg_color_start">#FF3CB5FA</color>
     <color name="fan_menu_center_bg_color_end">#FF337EFA</color>
 
-    <color name="fan_menu_select_text_color1">#FFFFFFFF</color>
     <color name="fan_menu_select_text_color2">#FFC3C3C3</color>
-
     <color name="fan_menu_select_text_bg_color1">#32FFFFFF</color>
     <color name="fan_menu_select_text_bg_color2">#54B4B4B4</color>
     <color name="fan_menu_select_text_bg_color3">#DC000000</color>
@@ -28,15 +32,12 @@
 
     <color name="fan_menu_item_icon_bg_color">#FF369AFA</color>
 
-    <color name="fan_menu_dialog_title_bg_color">#FFFFFFFF</color>
     <color name="fan_menu_dialog_content_bg_color">#FFF5F6FA</color>
-    <color name="fan_menu_dialog_title_text_color">#FF008CFF</color>
-    <color name="fan_menu_dialog_cancel_text_color">#FF000000</color>
-    <color name="fan_menu_dialog_content_text_color">#FF535353</color>
     <color name="fan_menu_dialog_bg_color">#7D212121</color>
     <color name="fan_menu_dialog_item_circle_bg">#FF46BF73</color>
 
-    <color name="fan_menu_toast_text_color">#FFFFFFFF</color>
     <color name="fan_menu_toast_bg_color">#e833312e</color>
 
+    <color name="fan_menu_setting_switch_on_color">#FFB2D82D</color>
+    <color name="fan_menu_setting_bg_color">#FFF5F6FA</color>
 </resources>

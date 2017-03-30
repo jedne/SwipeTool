@@ -187,7 +187,7 @@ public class AppInfoHelper {
             Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM);
             appInfo.setIntent(intent);
         } else if (TOOLBOX_PKG_BLUETOOTH.equals(pkgName)) {
-            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_bluetooth));
+            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_bluetooth_on));
             appInfo.setPkgName(pkgName);
             appInfo.setAppLabel(rs.getString(R.string.fan_menu_toolbox_bluetooth_title));
         } else if (TOOLBOX_PKG_CALCULATOR.equals(pkgName)) {
@@ -195,22 +195,22 @@ public class AppInfoHelper {
             appInfo.setPkgName(pkgName);
             appInfo.setAppLabel(rs.getString(R.string.fan_menu_toolbox_calculator_title));
         } else if (TOOLBOX_PKG_FLIGHT.equals(pkgName)) {
-            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_flight));
+            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_flight_on));
             appInfo.setPkgName(pkgName);
             appInfo.setAppLabel(rs.getString(R.string.fan_menu_toolbox_flight_title));
 
             Intent intent = new Intent(Settings.ACTION_AIRPLANE_MODE_SETTINGS);
             appInfo.setIntent(intent);
         } else if (TOOLBOX_PKG_LOCKER.equals(pkgName)) {
-            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_locker));
+            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_locker_0));
             appInfo.setPkgName(pkgName);
             appInfo.setAppLabel(rs.getString(R.string.fan_menu_toolbox_locker_title));
         } else if (TOOLBOX_PKG_ROTATE.equals(pkgName)) {
-            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_rotate));
+            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_rotate_on));
             appInfo.setPkgName(pkgName);
             appInfo.setAppLabel(rs.getString(R.string.fan_menu_toolbox_rotate_title));
         } else if (TOOLBOX_PKG_WIFI.equals(pkgName)) {
-            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_wifi));
+            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_wifi_on));
             appInfo.setPkgName(pkgName);
             appInfo.setAppLabel(rs.getString(R.string.fan_menu_toolbox_wifi_title));
         } else if (TOOLBOX_PKG_CAMERA.equals(pkgName)) {
@@ -222,7 +222,7 @@ public class AppInfoHelper {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             appInfo.setIntent(intent);
         } else if (TOOLBOX_PKG_AUDIO.equals(pkgName)) {
-            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_audio));
+            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_audio_1));
             appInfo.setPkgName(pkgName);
             appInfo.setAppLabel(rs.getString(R.string.fan_menu_toolbox_audio_title));
         } else if (TOOLBOX_PKG_SETTING.equals(pkgName)) {
@@ -233,7 +233,7 @@ public class AppInfoHelper {
             Intent intent = new Intent(Settings.ACTION_SETTINGS);
             appInfo.setIntent(intent);
         } else if (TOOLBOX_PKG_LIGHTBULB.equals(pkgName)) {
-            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_lightbulb));
+            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_lightbulb_on));
             appInfo.setPkgName(pkgName);
             appInfo.setAppLabel(rs.getString(R.string.fan_menu_toolbox_lightbulb_title));
         } else if (TOOLBOX_PKG_ISWIP.equals(pkgName)) {
@@ -241,7 +241,7 @@ public class AppInfoHelper {
             appInfo.setPkgName(pkgName);
             appInfo.setAppLabel(rs.getString(R.string.fan_menu_toolbox_iswip_title));
         } else if (TOOLBOX_PKG_DATA.equals(pkgName)) {
-            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_data));
+            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_data_on));
             appInfo.setPkgName(pkgName);
             appInfo.setAppLabel(rs.getString(R.string.fan_menu_toolbox_data_title));
         } else if (TOOLBOX_PKG_CALENDAR.equals(pkgName)) {
@@ -253,7 +253,7 @@ public class AppInfoHelper {
             intent.setComponent((new ComponentName("com.android.calendar", pkgName)));
             appInfo.setIntent(intent);
         } else if (TOOLBOX_PKG_BRIGHT.equals(pkgName)) {
-            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_bright));
+            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_bright_1));
             appInfo.setPkgName(pkgName);
             appInfo.setAppLabel(rs.getString(R.string.fan_menu_toolbox_bright_title));
         }

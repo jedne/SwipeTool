@@ -33,8 +33,8 @@ import com.jeden.fanmenu.view.base.CardState;
 public class FanRootView extends FrameLayout {
     private static final String TAG = FanRootView.class.getSimpleName();
 
-    private static final double MIN_SLID_DEGREE = 30;
-    private static final int MIN_SLID_SPEED = 3500;
+    private static final double MIN_SLID_DEGREE = 20;
+    private static final int MIN_SLID_SPEED = 3000;
 
     private int mPositionState = -1;
     private int mSelectTextIndex = -1;

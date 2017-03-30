@@ -53,7 +53,7 @@ public class FanCenterView extends CommonPositionView {
     private void initView(Context context) {
 
         Resources rs = context.getResources();
-        int textColor = rs.getColor(R.color.fan_menu_center_text_color);
+        int textColor = rs.getColor(R.color.fan_menu_common_white_color);
         mBgColorStart = rs.getColor(R.color.fan_menu_center_bg_color_start);
         mBgColorEnd = rs.getColor(R.color.fan_menu_center_bg_color_end);
         int textWidth = FanMenuViewTools.dip2px(context, CENTER_TEXT_WIDTH);

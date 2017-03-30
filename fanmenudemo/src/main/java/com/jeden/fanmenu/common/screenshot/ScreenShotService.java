@@ -66,9 +66,8 @@ public class ScreenShotService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1 &&
-                Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-        {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1 &&
+                Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
@@ -82,23 +81,19 @@ public class ScreenShotService extends Service {
         return START_NOT_STICKY;
     }
 
-    public void getScreenShot()
-    {
+    public void getScreenShot() {
         try {
-            float[] dims = {mScreenWidth , mScreenHeight };
+            float[] dims = {mScreenWidth, mScreenHeight};
             Class sc = Class.forName("android.view.Surface");
-            Method method=sc.getMethod("screenshot", new Class[] {int.class, int.class});
-            Object o = method.invoke(sc, new Object[]{(int) dims[0],(int) dims[1]});
-            Bitmap screenBitmap =(Bitmap)o;
+            Method method = sc.getMethod("screenshot", new Class[]{int.class, int.class});
+            Object o = method.invoke(sc, new Object[]{(int) dims[0], (int) dims[1]});
+            Bitmap screenBitmap = (Bitmap) o;
 
             Log.v("ScreenShotService", "getScreenShot bitmap:" + screenBitmap);
-            if(screenBitmap != null)
-            {
+            if (screenBitmap != null) {
                 new PreViewPicture(ScreenShotService.this).takeScreenshot(screenBitmap, true, true);
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
 
         }
     }
@@ -281,8 +276,7 @@ public class ScreenShotService extends Service {
         tearDownMediaProjection();
     }
 
-    class PreViewPicture
-    {
+    class PreViewPicture {
         private static final int SCREENSHOT_FLASH_TO_PEAK_DURATION = 130;
         private static final int SCREENSHOT_DROP_IN_DURATION = 430;
         private static final int SCREENSHOT_DROP_OUT_DELAY = 500;
@@ -313,7 +307,7 @@ public class ScreenShotService extends Service {
 
         private MediaActionSound mCameraSound;
 
-        public PreViewPicture(Context context){
+        public PreViewPicture(Context context) {
             Resources r = context.getResources();
             mContext = context;
             LayoutInflater layoutInflater = (LayoutInflater)

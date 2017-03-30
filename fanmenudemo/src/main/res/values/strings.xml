@@ -27,9 +27,12 @@
     <string name="fan_menu_toolbox_calendar_title">日历</string>
     <string name="fan_menu_toolbox_bright_title">屏幕亮度</string>
 
-    <string name="fan_menu_toolbox_audio_normal">响铃模式</string>
-    <string name="fan_menu_toolbox_audio_silent">静音模式</string>
-    <string name="fan_menu_toolbox_audio_vibrate">震动模式</string>
+    <string name="fan_menu_toolbox_audio_normal_toast">响铃模式</string>
+    <string name="fan_menu_toolbox_audio_silent_toast">静音模式</string>
+    <string name="fan_menu_toolbox_audio_vibrate_toast">震动模式</string>
+    <string name="fan_menu_toolbox_audio_normal">响铃</string>
+    <string name="fan_menu_toolbox_audio_silent">静音</string>
+    <string name="fan_menu_toolbox_audio_vibrate">震动</string>
 
     <string name="fan_menu_toolbox_auto_locker_0">无操作30s后锁屏</string>
     <string name="fan_menu_toolbox_auto_locker_1">无操作1m后锁屏</string>
@@ -49,4 +52,7 @@
 
     <string name="fan_menu_toolbox_wifi_on">WIFI已开启</string>
     <string name="fan_menu_toolbox_wifi_off">WIFI已关闭</string>
+
+    <string name="fan_menu_setting_title">Setting</string>
+    <string name="fan_menu_setting_iswipe">iSwipe Switch</string>
 </resources>

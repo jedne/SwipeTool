@@ -7,6 +7,8 @@ import android.hardware.Camera.Parameters;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.jeden.fanmenu.R;
+
 /**
  * Created by jeden on 2017/3/23.
  */
@@ -19,20 +21,17 @@ public class SwipeFlashLight extends SwipeTools {
     private static String previousFlashMode = null;
     private boolean mIsOpen;
 
-    private SwipeFlashLight(Context context)
-    {
+    private SwipeFlashLight(Context context) {
     }
-    public static SwipeFlashLight getInstance(Context context)
-    {
-        if(mInstance == null)
-        {
+
+    public static SwipeFlashLight getInstance(Context context) {
+        if (mInstance == null) {
             newInstance(context);
         }
         return mInstance;
     }
 
-    private static synchronized void newInstance(Context context)
-    {
+    private static synchronized void newInstance(Context context) {
         mInstance = new SwipeFlashLight(context);
     }
 
@@ -47,15 +46,16 @@ public class SwipeFlashLight extends SwipeTools {
         changeViewState();
     }
 
-    private void changeViewState()
-    {
-        if(mIsOpen)
-        {
-            //TODO
+    private void changeViewState() {
+        SwipeView view = mSwipeView.get();
+        if (view == null) {
+            return;
         }
-        else
-        {
 
+        if (mIsOpen) {
+            view.getIconView().setBackgroundResource(R.drawable.fan_item_icon_lightbulb_on);
+        } else {
+            view.getIconView().setBackgroundResource(R.drawable.fan_item_icon_lightbulb_off);
         }
     }
 

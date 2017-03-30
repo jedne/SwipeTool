@@ -62,7 +62,7 @@ public class FanMenuItemView extends RelativeLayout implements SwipeView{
     }
 
     public void setItemIcon(Drawable icon) {
-        mIcon.setImageDrawable(icon);
+        mIcon.setBackgroundDrawable(icon);
     }
 
     public ImageView getDeleteView(){
@@ -74,13 +74,13 @@ public class FanMenuItemView extends RelativeLayout implements SwipeView{
         mToolboxModel = toolboxModel;
         if(mToolboxModel)
         {
-            mIcon.setBackgroundResource(R.drawable.fan_item_icon_bg);
-            mIcon.setScaleType(ImageView.ScaleType.CENTER);
+//            mIcon.setBackgroundResource(R.drawable.fan_item_icon_bg);
+//            mIcon.setScaleType(ImageView.ScaleType.CENTER);
         }
         else
         {
-            mIcon.setBackgroundDrawable(null);
-            mIcon.setScaleType(ImageView.ScaleType.FIT_XY);
+//            mIcon.setBackgroundDrawable(null);
+//            mIcon.setScaleType(ImageView.ScaleType.FIT_XY);
         }
     }
 

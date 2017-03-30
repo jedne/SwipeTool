@@ -77,7 +77,7 @@ public class FanSelectTextLayout extends CommonPositionViewGroup {
         int bgc1 = rs.getColor(R.color.fan_menu_select_text_bg_color1);
         int bgc2 = rs.getColor(R.color.fan_menu_select_text_bg_color2);
         int bgc3 = rs.getColor(R.color.fan_menu_select_text_bg_color3);
-        mSelectColor = rs.getColor(R.color.fan_menu_select_text_color1);
+        mSelectColor = rs.getColor(R.color.fan_menu_common_white_color);
         mNormalColor = rs.getColor(R.color.fan_menu_select_text_color2);
 
         mTouchSlop = FanMenuViewTools.dip2px(context, 4);

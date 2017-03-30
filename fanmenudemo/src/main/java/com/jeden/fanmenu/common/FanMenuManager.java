@@ -35,7 +35,7 @@ public class FanMenuManager {
 
     private static volatile FanMenuManager mInstance;
 
-    private FanMenuManager(Context context, WindowManager wm){
+    private FanMenuManager(Context context, WindowManager wm) {
         this.mContext = context;
         this.mWindowManager = wm;
 
@@ -47,9 +47,8 @@ public class FanMenuManager {
         initToastView();
     }
 
-    private void initFlowingView(){
-        if(mFlowingView != null)
-        {
+    private void initFlowingView() {
+        if (mFlowingView != null) {
             return;
         }
 
@@ -57,45 +56,40 @@ public class FanMenuManager {
         mFlowingView.setBackgroundResource(R.drawable.fan_menu_whitedot_pressed);
     }
 
-    private void initFanMenuView(){
+    private void initFanMenuView() {
 
-        if(mFanRootView != null) {
+        if (mFanRootView != null) {
             return;
         }
-        mFanRootView = (FanRootView)mLayoutInflater.inflate(R.layout.fan_menu_root_layout, null);
+        mFanRootView = (FanRootView) mLayoutInflater.inflate(R.layout.fan_menu_root_layout, null);
     }
 
-    private void initDialogView()
-    {
-        if(mDialogView != null)
-        {
+    private void initDialogView() {
+        if (mDialogView != null) {
             return;
         }
         mDialogView = (FanMenuDialog) mLayoutInflater.inflate(R.layout.fan_dialog_layout, null);
     }
 
-    private void initToastView()
-    {
-        if(mFanToastView != null)
-        {
+    private void initToastView() {
+        if (mFanToastView != null) {
             return;
         }
         mFanToastView = (FanToast) mLayoutInflater.inflate(R.layout.fan_toast_layout, null);
     }
 
-    private WindowManager.LayoutParams generateFanMenuLP(){
+    private WindowManager.LayoutParams generateFanMenuLP() {
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.FILL_PARENT,
                 WindowManager.LayoutParams.FILL_PARENT,
                 WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
-                        WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN |
-                        WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
+                        WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
                 PixelFormat.TRANSLUCENT);
         return lp;
     }
 
-    private WindowManager.LayoutParams generateFlowingLP(){
+    private WindowManager.LayoutParams generateFlowingLP() {
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
@@ -111,8 +105,7 @@ public class FanMenuManager {
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
 
         FanMenuConfig config = FanMenuConfig.getMenuConfig();
-        if(config.getFlowingY() == 0)
-        {
+        if (config.getFlowingY() == 0) {
             Point p = new Point();
             mWindowManager.getDefaultDisplay().getSize(p);
             lp.x = p.x;
@@ -120,23 +113,20 @@ public class FanMenuManager {
             config.setFlowingX(p.x);
             config.setFlowingY(p.y);
             config.setPositionState(PositionState.POSITION_STATE_RIGHT);
-        }
-        else
-        {
+        } else {
             lp.x = config.getFlowingX();
             lp.y = config.getFlowingY();
         }
         return lp;
     }
 
-    private WindowManager.LayoutParams generateToastLP(){
+    private WindowManager.LayoutParams generateToastLP() {
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.FILL_PARENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
-                        WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN |
-                        WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
+                        WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
                 PixelFormat.TRANSLUCENT);
         lp.gravity = Gravity.LEFT | Gravity.TOP;
         lp.x = 0;
@@ -144,22 +134,29 @@ public class FanMenuManager {
         return lp;
     }
 
-    private void showFlowing(){
-        if(mFlowingView.getParent() != null) {
+    private void showFlowing() {
+        if (mFlowingView.getParent() != null) {
             Log.w(TAG, "flowing view have showed");
             return;
         }
 
-        if(mFlowingViewLP == null){
+        if (mFlowingViewLP == null) {
             mFlowingViewLP = generateFlowingLP();
         }
         mFlowingView.setParams(mFlowingViewLP);
         mWindowManager.addView(mFlowingView, mFlowingViewLP);
     }
 
-    private void updateFlowingPosition(WindowManager.LayoutParams params){
+    private boolean isFlowingShow() {
         if(mFlowingView != null && mFlowingView.getParent() != null)
         {
+            return true;
+        }
+        return false;
+    }
+
+    private void updateFlowingPosition(WindowManager.LayoutParams params) {
+        if (mFlowingView != null && mFlowingView.getParent() != null) {
             mFlowingViewLP = params;
             FanMenuConfig.getMenuConfig().setFlowingX(mFlowingViewLP.x);
             FanMenuConfig.getMenuConfig().setFlowingY(mFlowingViewLP.y);
@@ -169,8 +166,8 @@ public class FanMenuManager {
         }
     }
 
-    private void showFanMenu(){
-        if(mFanRootView.getParent() != null) {
+    private void showFanMenu() {
+        if (mFanRootView.getParent() != null) {
             Log.w(TAG, "fan menu have showed");
             return;
         }
@@ -179,38 +176,34 @@ public class FanMenuManager {
         mFanRootView.showFanMenu();
     }
 
-    private void removeFlowing(){
-        if(mWindowManager != null && mFlowingView != null && mFlowingView.getParent() != null){
+    private void removeFlowing() {
+        if (mWindowManager != null && mFlowingView != null && mFlowingView.getParent() != null) {
             mWindowManager.removeView(mFlowingView);
         }
     }
 
-    private void removeFanMenu(){
-        if(mWindowManager != null && mFanRootView != null && mFanRootView.getParent() != null){
+    private void removeFanMenu() {
+        if (mWindowManager != null && mFanRootView != null && mFanRootView.getParent() != null) {
             mWindowManager.removeView(mFanRootView);
         }
     }
 
-    private void showToast(String content)
-    {
-        if(mFanToastView.getParent() == null)
-        {
+    private void showToast(String content) {
+        if (mFanToastView.getParent() == null) {
             mWindowManager.addView(mFanToastView, generateToastLP());
             mFanToastView.showAnimator();
         }
         mFanToastView.showToast(content);
     }
 
-    private void removeToast()
-    {
-        if(mWindowManager != null && mFanToastView != null && mFanToastView.getParent() != null){
+    private void removeToast() {
+        if (mWindowManager != null && mFanToastView != null && mFanToastView.getParent() != null) {
             mWindowManager.removeView(mFanToastView);
         }
     }
 
-    private void showDialog(int selectCard, FanMenuDialog.DialogSubmitListener listener)
-    {
-        if(mDialogView.getParent() != null) {
+    private void showDialog(int selectCard, FanMenuDialog.DialogSubmitListener listener) {
+        if (mDialogView.getParent() != null) {
             Log.w(TAG, "dialog have showed");
             return;
         }
@@ -219,19 +212,16 @@ public class FanMenuManager {
         mDialogView.showDialog();
     }
 
-    private void removeDialog()
-    {
-        if(mWindowManager != null && mDialogView != null && mDialogView.getParent() != null){
+    private void removeDialog() {
+        if (mWindowManager != null && mDialogView != null && mDialogView.getParent() != null) {
             mWindowManager.removeView(mDialogView);
         }
     }
 
-    private static FanMenuManager getInstance(Context context){
-        if(mInstance == null){
-            synchronized (FanMenuManager.class)
-            {
-                if(mInstance == null)
-                {
+    private static FanMenuManager getInstance(Context context) {
+        if (mInstance == null) {
+            synchronized (FanMenuManager.class) {
+                if (mInstance == null) {
                     WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
                     mInstance = new FanMenuManager(context, windowManager);
                 }
@@ -240,47 +230,45 @@ public class FanMenuManager {
         return mInstance;
     }
 
-    public static void showFlowingView(Context context){
+    public static void showFlowingView(Context context) {
         getInstance(context).showFlowing();
     }
 
-    public static void removeFlowingView(Context context){
+    public static boolean isFlowingShow(Context context) {
+        return getInstance(context).isFlowingShow();
+    }
+
+    public static void removeFlowingView(Context context) {
         getInstance(context).removeFlowing();
     }
 
-    public static void updateFlowingPosition(Context context, WindowManager.LayoutParams params){
+    public static void updateFlowingPosition(Context context, WindowManager.LayoutParams params) {
         getInstance(context).updateFlowingPosition(params);
     }
 
-    public static void closeFanMenu(Context context)
-    {
+    public static void closeFanMenu(Context context) {
         getInstance(context).removeFanMenu();
         getInstance(context).showFlowing();
     }
 
-    public static void showFanMenu(Context context)
-    {
+    public static void showFanMenu(Context context) {
         getInstance(context).showFanMenu();
         getInstance(context).removeFlowing();
     }
 
-    public static void closeDialog(Context context)
-    {
+    public static void closeDialog(Context context) {
         getInstance(context).removeDialog();
     }
 
-    public static void showDialog(Context context, int selectCard, FanMenuDialog.DialogSubmitListener listener)
-    {
+    public static void showDialog(Context context, int selectCard, FanMenuDialog.DialogSubmitListener listener) {
         getInstance(context).showDialog(selectCard, listener);
     }
 
-    public static void showToast(Context context, String content)
-    {
+    public static void showToast(Context context, String content) {
         getInstance(context).showToast(content);
     }
 
-    public static void removeToast(Context context)
-    {
+    public static void removeToast(Context context) {
         getInstance(context).removeToast();
     }
 }

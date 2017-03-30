@@ -59,7 +59,7 @@ public class FanMenuDialogItemView extends RelativeLayout implements View.OnClic
 
     public void setIcon(Drawable drawable)
     {
-        mIcon.setImageDrawable(drawable);
+        mIcon.setBackgroundDrawable(drawable);
     }
 
     public void setTitle(String title)
@@ -72,13 +72,13 @@ public class FanMenuDialogItemView extends RelativeLayout implements View.OnClic
         mToolboxModel = toolboxModel;
         if(mToolboxModel)
         {
-            mIcon.setBackgroundResource(R.drawable.fan_item_icon_bg);
-            mIcon.setScaleType(ImageView.ScaleType.CENTER);
+//            mIcon.setBackgroundResource(R.drawable.fan_item_icon_bg);
+//            mIcon.setScaleType(ImageView.ScaleType.CENTER);
         }
         else
         {
-            mIcon.setBackgroundDrawable(null);
-            mIcon.setScaleType(ImageView.ScaleType.FIT_XY);
+//            mIcon.setBackgroundDrawable(null);
+//            mIcon.setScaleType(ImageView.ScaleType.FIT_XY);
         }
     }
 

@@ -15,20 +15,17 @@ public class SwipeAutoLocker extends SwipeTools {
 
     private volatile static SwipeAutoLocker mInstance;
 
-    private SwipeAutoLocker(Context context)
-    {
+    private SwipeAutoLocker(Context context) {
     }
-    public static SwipeAutoLocker getInstance(Context context)
-    {
-        if(mInstance == null)
-        {
+
+    public static SwipeAutoLocker getInstance(Context context) {
+        if (mInstance == null) {
             newInstance(context);
         }
         return mInstance;
     }
 
-    private static synchronized void newInstance(Context context)
-    {
+    private static synchronized void newInstance(Context context) {
         mInstance = new SwipeAutoLocker(context);
     }
 
@@ -46,30 +43,38 @@ public class SwipeAutoLocker extends SwipeTools {
         changeViewState(context);
     }
 
-    private void changeViewState(Context context)
-    {
+    private void changeViewState(Context context) {
+        SwipeView view = mSwipeView.get();
+        if (view == null) {
+            return;
+        }
+
         int level = getScreenOffTimeoutLevel(context);
         Resources rs = context.getResources();
-        switch (level)
-        {
+        switch (level) {
             case 0:
-                //TODO
                 showToast(context, rs.getString(R.string.fan_menu_toolbox_auto_locker_0));
+                view.getIconView().setBackgroundResource(R.drawable.fan_item_icon_locker_0);
                 break;
             case 1:
                 showToast(context, rs.getString(R.string.fan_menu_toolbox_auto_locker_1));
+                view.getIconView().setBackgroundResource(R.drawable.fan_item_icon_locker_1);
                 break;
             case 2:
                 showToast(context, rs.getString(R.string.fan_menu_toolbox_auto_locker_2));
+                view.getIconView().setBackgroundResource(R.drawable.fan_item_icon_locker_2);
                 break;
             case 3:
                 showToast(context, rs.getString(R.string.fan_menu_toolbox_auto_locker_3));
+                view.getIconView().setBackgroundResource(R.drawable.fan_item_icon_locker_3);
                 break;
             case 4:
                 showToast(context, rs.getString(R.string.fan_menu_toolbox_auto_locker_4));
+                view.getIconView().setBackgroundResource(R.drawable.fan_item_icon_locker_4);
                 break;
             case 5:
                 showToast(context, rs.getString(R.string.fan_menu_toolbox_auto_locker_5));
+                view.getIconView().setBackgroundResource(R.drawable.fan_item_icon_locker_5);
                 break;
             default:
                 break;
@@ -96,11 +101,11 @@ public class SwipeAutoLocker extends SwipeTools {
 
     private int getScreenOffTimeoutLevel(Context context) {
         long timeout = getScreenOffTimeout(context);
-        return timeout <= 30000L?0:(timeout <= 60000L?1:(timeout <= 120000L?2:(timeout <= 300000L?3:(timeout <= 600000L?4:5))));
+        return timeout <= 30000L ? 0 : (timeout <= 60000L ? 1 : (timeout <= 120000L ? 2 : (timeout <= 300000L ? 3 : (timeout <= 600000L ? 4 : 5))));
     }
 
     private int getScreenOffTimeoutNextLevel(int level) {
-        switch(level) {
+        switch (level) {
             case 0:
                 return 1;
             case 1:
@@ -119,7 +124,7 @@ public class SwipeAutoLocker extends SwipeTools {
     }
 
     private void setScreenOffTimeoutLevel(Context context, int level) {
-        switch(level) {
+        switch (level) {
             case 0:
                 setScreenOffTimeout(context, 30000L);
                 break;

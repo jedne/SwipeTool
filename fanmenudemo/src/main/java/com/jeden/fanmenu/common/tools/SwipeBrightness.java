@@ -5,6 +5,8 @@ import android.content.Context;
 import android.os.PowerManager;
 import android.provider.Settings;
 
+import com.jeden.fanmenu.R;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -31,17 +33,14 @@ public class SwipeBrightness extends SwipeTools {
         mPowerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
     }
 
-    public static SwipeBrightness getInstance(Context context)
-    {
-        if(mInstance == null)
-        {
+    public static SwipeBrightness getInstance(Context context) {
+        if (mInstance == null) {
             newInstance(context);
         }
         return mInstance;
     }
 
-    private static synchronized void newInstance(Context context)
-    {
+    private static synchronized void newInstance(Context context) {
         mInstance = new SwipeBrightness(context);
     }
 
@@ -58,21 +57,24 @@ public class SwipeBrightness extends SwipeTools {
         changeViewState(context);
     }
 
-    private void changeViewState(Context context)
-    {
+    private void changeViewState(Context context) {
+        SwipeView view = mSwipeView.get();
+        if (view == null) {
+            return;
+        }
+
         int bright = getBrightStatus(context);
-        switch (bright)
-        {
+        switch (bright) {
             case LIGHT_NORMAL:
-                //TODO
+                view.getIconView().setBackgroundResource(R.drawable.fan_item_icon_bright_3);
                 break;
             case LIGHT_50_PERCENT:
-                break;
             case LIGHT_75_PERCENT:
-                break;
             case LIGHT_100_PERCENT:
+                view.getIconView().setBackgroundResource(R.drawable.fan_item_icon_bright_2);
                 break;
             case LIGHT_AUTO:
+                view.getIconView().setBackgroundResource(R.drawable.fan_item_icon_bright_1);
                 break;
             case LIGHT_ERR:
                 break;

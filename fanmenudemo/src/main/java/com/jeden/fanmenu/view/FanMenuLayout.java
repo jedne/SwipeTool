@@ -626,7 +626,7 @@ public class FanMenuLayout extends CommonPositionViewGroup {
     public int getChildByPoint(float x, float y) {
         for (int i = 0; i < mDragIndexPoint.length; i++) {
             Rect r = mDragIndexPoint[i];
-            if (isPointInRect(r, x, y)) {
+            if (r != null && isPointInRect(r, x, y)) {
                 return i;
             }
         }

@@ -16,20 +16,17 @@ import java.util.Locale;
 public class SwipeCalculator extends SwipeTools {
     private volatile static SwipeCalculator mInstance;
 
-    private SwipeCalculator(Context context)
-    {
+    private SwipeCalculator(Context context) {
     }
-    public static SwipeCalculator getInstance(Context context)
-    {
-        if(mInstance == null)
-        {
+
+    public static SwipeCalculator getInstance(Context context) {
+        if (mInstance == null) {
             newInstance(context);
         }
         return mInstance;
     }
 
-    private static synchronized void newInstance(Context context)
-    {
+    private static synchronized void newInstance(Context context) {
         mInstance = new SwipeCalculator(context);
     }
 
@@ -48,16 +45,16 @@ public class SwipeCalculator extends SwipeTools {
         try {
             PackageManager e = context.getPackageManager();
             List packageInfos = e.getInstalledPackages(0);
-            if(packageInfos == null) {
+            if (packageInfos == null) {
                 return false;
             } else {
                 Iterator var3 = packageInfos.iterator();
 
-                while(var3.hasNext()) {
-                    PackageInfo pi = (PackageInfo)var3.next();
-                    if(pi != null && pi.packageName != null && pi.packageName.toLowerCase(Locale.US).contains("calcul")) {
+                while (var3.hasNext()) {
+                    PackageInfo pi = (PackageInfo) var3.next();
+                    if (pi != null && pi.packageName != null && pi.packageName.toLowerCase(Locale.US).contains("calcul")) {
                         Intent i = e.getLaunchIntentForPackage(pi.packageName);
-                        if(i != null) {
+                        if (i != null) {
                             i.setFlags(268435456);
                             context.startActivity(i);
                             break;

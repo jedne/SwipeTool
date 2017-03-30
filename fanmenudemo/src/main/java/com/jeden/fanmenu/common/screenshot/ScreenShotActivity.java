@@ -52,10 +52,9 @@ public class ScreenShotActivity extends Activity {
                 if (resultCode == RESULT_OK && data != null) {
                     ScreenShotService.setResultData(data);
                     startService(new Intent(getApplicationContext(), ScreenShotService.class));
-                finish();
                 }
                 break;
         }
-
+        finish();
     }
 }

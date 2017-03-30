@@ -2,6 +2,8 @@ package com.jeden.fanmenu.services;
 
 import android.content.Context;
 
+import com.jeden.fanmenu.common.FanMenuManager;
+
 /**
  * Created by jeden on 2017/3/22.
  */
@@ -27,5 +29,15 @@ public class FanMenuSDK {
             return;
         }
         FanMenuService.hideFlowing(mContext);
+    }
+
+    public static boolean isFlowingShow()
+    {
+        if(mContext == null)
+        {
+            return false;
+        }
+
+        return FanMenuManager.isFlowingShow(mContext);
     }
 }

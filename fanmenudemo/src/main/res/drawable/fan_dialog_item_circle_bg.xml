@@ -7,5 +7,5 @@
         android:height="@dimen/fan_menu_dialog_item_circle_width"/>
 
     <solid
-        android:color="@color/fan_menu_dialog_title_bg_color"/>
+        android:color="@color/fan_menu_common_white_color"/>
 </shape>
