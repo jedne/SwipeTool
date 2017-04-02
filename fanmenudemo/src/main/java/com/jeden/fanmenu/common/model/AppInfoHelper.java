@@ -100,7 +100,7 @@ public class AppInfoHelper {
     private static void initToolboxFirstTime(List<AppInfo> allApp, List<AppInfo> needApp) {
         for (int i = 0; i < allApp.size(); i++) {
             AppInfo appInfo = allApp.get(i);
-            if (i < 9) {
+            if (i < 8) {
                 needApp.add(appInfo);
             }
         }
@@ -109,7 +109,7 @@ public class AppInfoHelper {
     private static void initFavoriteFirstTime(List<AppInfo> allApp, List<AppInfo> needApp) {
         for (int i = 0; i < allApp.size(); i++) {
             AppInfo appInfo = allApp.get(i);
-            if (i < 9) {
+            if (i < 8) {
                 needApp.add(appInfo);
             }
         }
@@ -131,7 +131,7 @@ public class AppInfoHelper {
         try {
             array = new JSONArray(cache);
         } catch (JSONException e) {
-            Log.w(TAG, "initDataByCache exception cache:" + cache);
+            FanLog.e(TAG, "initDataByCache exception cache:" + cache);
         }
 
         if (array == null || favorite.size() >= 9) {
@@ -282,10 +282,10 @@ public class AppInfoHelper {
                 AppInfo appInfo = new AppInfo();
                 appInfo.setAppLabel(appLabel);
                 appInfo.setPkgName(pkgName);
-                appInfo.setAppIcon(icon);
+                appInfo.setAppIcon(compressDrawable(icon));
                 appInfo.setIntent(launchIntent);
                 listAppInfo.add(appInfo);
-                Log.v(TAG, appLabel + " activityName---" + activityName
+                FanLog.v(TAG, appLabel + " activityName---" + activityName
                         + " pkgName---" + pkgName);
             }
         }
@@ -306,11 +306,34 @@ public class AppInfoHelper {
                 appInfo = new AppInfo();
                 appInfo.setAppLabel((String) resolveInfo.loadLabel(pm));
                 appInfo.setPkgName(resolveInfo.activityInfo.packageName);
-                appInfo.setAppIcon(resolveInfo.loadIcon(pm));
+                appInfo.setAppIcon(compressDrawable(resolveInfo.loadIcon(pm)));
                 appInfo.setIntent(intent);
                 listAppInfo.add(appInfo);
-                Log.v(TAG, "queryRecently activityName---" + appInfo.getAppLabel());
+                FanLog.v(TAG, "queryRecently activityName---" + appInfo.getAppLabel());
             }
         }
+    }
+
+    public static Drawable compressDrawable(Drawable drawable) {
+        int width = drawable.getIntrinsicWidth();
+        int height = drawable.getIntrinsicHeight();
+        Bitmap oldBmp = drawableToBitmap(drawable);
+        Matrix matrix = new Matrix();
+        float scaleWidth = ((float) 50 / width);
+        float scaleHeight = ((float) 50 / height);
+        matrix.postScale(scaleWidth, scaleHeight);
+        Bitmap newBmp = Bitmap.createBitmap(oldBmp, 0, 0, width, height, matrix, true);
+        return new BitmapDrawable(newBmp);
+    }
+
+    public static Bitmap drawableToBitmap(Drawable drawable) {
+        int width = drawable.getIntrinsicWidth();
+        int height = drawable.getIntrinsicHeight();
+        Bitmap.Config config = drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888 : Bitmap.Config.RGB_565;
+        Bitmap bitmap = Bitmap.createBitmap(width, height, config);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, width, height);
+        drawable.draw(canvas);
+        return bitmap;
     }
 }

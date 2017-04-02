@@ -61,18 +61,18 @@ public class SwipeAudio extends SwipeTools {
 
         switch (getState()) {
             case AudioManager.RINGER_MODE_SILENT:
-                view.getIconView().setBackgroundResource(R.drawable.fan_item_icon_audio_3);
-                view.getTitleView().setText(R.string.fan_menu_toolbox_audio_silent);
+                view.setItemIcon(rs.getDrawable(R.drawable.fan_item_icon_audio_3));
+                view.setTitle(rs.getString(R.string.fan_menu_toolbox_audio_silent));
                 showToast(context, rs.getString(R.string.fan_menu_toolbox_audio_silent_toast));
                 break;
             case AudioManager.RINGER_MODE_NORMAL:
-                view.getIconView().setBackgroundResource(R.drawable.fan_item_icon_audio_2);
-                view.getTitleView().setText(R.string.fan_menu_toolbox_audio_normal);
+                view.setItemIcon(rs.getDrawable(R.drawable.fan_item_icon_audio_2));
+                view.setTitle(rs.getString(R.string.fan_menu_toolbox_audio_normal));
                 showToast(context, rs.getString(R.string.fan_menu_toolbox_audio_normal_toast));
                 break;
             case AudioManager.RINGER_MODE_VIBRATE:
-                view.getIconView().setBackgroundResource(R.drawable.fan_item_icon_audio_1);
-                view.getTitleView().setText(R.string.fan_menu_toolbox_audio_vibrate);
+                view.setItemIcon(rs.getDrawable(R.drawable.fan_item_icon_audio_1));
+                view.setTitle(rs.getString(R.string.fan_menu_toolbox_audio_vibrate));
                 showToast(context, rs.getString(R.string.fan_menu_toolbox_audio_vibrate_toast));
                 break;
         }

@@ -28,7 +28,6 @@ import android.os.IBinder;
 import android.support.annotation.RequiresApi;
 import android.support.v4.os.AsyncTaskCompat;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +36,7 @@ import android.view.animation.Interpolator;
 import android.widget.ImageView;
 
 import com.jeden.fanmenu.R;
+import com.jeden.fanmenu.util.FanLog;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -314,7 +314,7 @@ public class ScreenShotService extends Service {
                     context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
             // Inflate the screenshot layout
-            mScreenshotLayout = layoutInflater.inflate(R.layout.global_screenshot, null);
+            mScreenshotLayout = layoutInflater.inflate(R.layout.fan_global_screenshot, null);
             mBackgroundView = (ImageView) mScreenshotLayout.findViewById(R.id.global_screenshot_background);
             mScreenshotView = (ImageView) mScreenshotLayout.findViewById(R.id.global_screenshot);
             mScreenshotFlash = (ImageView) mScreenshotLayout.findViewById(R.id.global_screenshot_flash);

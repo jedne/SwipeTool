@@ -2,10 +2,10 @@ package com.jeden.fanmenu.common.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
-import com.jeden.fanmenu.view.base.PositionState;
+import com.jeden.fanmenu.util.FanLog;
 import com.jeden.fanmenu.view.base.CardState;
+import com.jeden.fanmenu.view.base.PositionState;
 
 /**
  * Created by jeden on 2017/3/15.
@@ -46,9 +46,9 @@ public class DataBeans {
         ed.putInt(FAN_MENU_CONFIG_FLOW_Y, config.getFlowingY());
         ed.putInt(FAN_MENU_CONFIG_POSITION_STATE, config.getPositionState());
         ed.putInt(FAN_MENU_CONFIG_CARD_INDEX, config.getCardIndex());
-        ed.commit();
+        ed.apply();
 
-        Log.v(TAG, "saveConfig config" + config.toString());
+        FanLog.v(TAG, "saveConfig config" + config.toString());
     }
 
     void getConfig(FanMenuConfig config) {
@@ -58,7 +58,7 @@ public class DataBeans {
         config.setPositionState(mSp.getInt(FAN_MENU_CONFIG_POSITION_STATE, PositionState.POSITION_STATE_LEFT));
         config.setCardIndex(mSp.getInt(FAN_MENU_CONFIG_CARD_INDEX, CardState.CARD_STATE_RECENTLY));
 
-        Log.v(TAG, "getConfig config:" + config.toString());
+        FanLog.v(TAG, "getConfig config:" + config.toString());
     }
 
     void saveFavorite(String favorite) {

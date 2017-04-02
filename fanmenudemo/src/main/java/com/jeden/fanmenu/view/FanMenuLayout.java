@@ -12,19 +12,18 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 
 import com.jeden.fanmenu.R;
 import com.jeden.fanmenu.bean.AppInfo;
-import com.jeden.fanmenu.common.model.ContentProvider;
 import com.jeden.fanmenu.common.FanMenuViewTools;
-import com.jeden.fanmenu.view.base.CommonPositionViewGroup;
+import com.jeden.fanmenu.common.model.ContentProvider;
+import com.jeden.fanmenu.util.FanLog;
 import com.jeden.fanmenu.view.base.CardState;
+import com.jeden.fanmenu.view.base.CommonPositionViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,6 +95,10 @@ public class FanMenuLayout extends CommonPositionViewGroup {
         mItemOuterRadius = rs.getDimensionPixelSize(R.dimen.fan_menu_item_outer_radius);
 
         mTouchSlop = FanMenuViewTools.dip2px(context, 5);
+
+        setPersistentDrawingCache(PERSISTENT_ALL_CACHES);
+        setDrawingCacheEnabled(true);
+        setDrawingCacheBackgroundColor(0xFF0C0C0C);
     }
 
     public void addAllItemView() {
@@ -105,7 +108,8 @@ public class FanMenuLayout extends CommonPositionViewGroup {
         List<AppInfo> tempAppInfo = getData();
 
         for (AppInfo info : tempAppInfo) {
-            itemView = (FanMenuItemView) inflater.inflate(R.layout.fan_menu_item_layout, null);
+//            itemView = (FanMenuItemView) inflater.inflate(R.layout.fan_menu_item_layout, null);
+            itemView = new FanMenuItemView(getContext());
             itemView.setToolboxModel(mMenuType == CardState.CARD_STATE_TOOLBOX);
             itemView.setTitle(info.getAppLabel());
             itemView.setItemIcon(info.getAppIcon());
@@ -312,8 +316,8 @@ public class FanMenuLayout extends CommonPositionViewGroup {
     }
 
     public boolean isTouchTheDeleteView(FanMenuItemView v, float x, float y) {
-        ImageView delete = v.getDeleteView();
-        if (x > delete.getLeft() && x < delete.getRight() && y > delete.getTop() && y < delete.getBottom()) {
+        Rect delete = v.getDeleteRect();
+        if (x > delete.left && x < delete.right && y > delete.top && y < delete.bottom) {
             return true;
         }
 
@@ -534,7 +538,7 @@ public class FanMenuLayout extends CommonPositionViewGroup {
             if (selectIndex == mLastSlot[0]) {
                 return;
             }
-            Log.v(TAG, "addMirrorView getChildByPoint child:" + ((AppInfo) mLastSlotView[selectIndex].getTag()).getAppLabel());
+            FanLog.v(TAG, "addMirrorView getChildByPoint child:" + ((AppInfo) mLastSlotView[selectIndex].getTag()).getAppLabel());
             FanMenuItemView from = mLastSlotView[selectIndex];
             changeTwoChildPosition(from, getData().get(mLastSlot[0]));
             FanMenuItemView temp = mLastSlotView[mLastSlot[0]];
@@ -643,7 +647,7 @@ public class FanMenuLayout extends CommonPositionViewGroup {
     }
 
     public void startEditModel() {
-        Log.v(TAG, "startEditModel");
+        FanLog.v(TAG, "startEditModel");
         mIsEditModel = true;
         List<AppInfo> data = getData();
         for (AppInfo appInfo : data) {
@@ -653,7 +657,7 @@ public class FanMenuLayout extends CommonPositionViewGroup {
     }
 
     public void endEditModel() {
-        Log.v(TAG, "endEditModel");
+        FanLog.v(TAG, "endEditModel");
         mIsEditModel = false;
         List<AppInfo> data = getData();
         for (AppInfo appInfo : data) {
@@ -665,7 +669,7 @@ public class FanMenuLayout extends CommonPositionViewGroup {
     private class LongClickRunnable implements Runnable {
         @Override
         public void run() {
-            if (mStateChangeable != null) {
+            if (mStateChangeable != null && !mDisableTouchEvent) {
                 mStateChangeable.longClickStateChange(FanMenuLayout.this, true);
                 startEditModel();
 

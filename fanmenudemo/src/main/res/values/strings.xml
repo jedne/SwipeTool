@@ -55,4 +55,6 @@
 
     <string name="fan_menu_setting_title">Setting</string>
     <string name="fan_menu_setting_iswipe">iSwipe Switch</string>
+
+    <string name="fan_menu_dialog_max_select">最多只能选9个</string>
 </resources>

@@ -281,7 +281,7 @@ public class FanSelectTextLayout extends CommonPositionViewGroup {
             default:
                 break;
         }
-        invalidate();
+//        invalidate();
     }
 
     @Override

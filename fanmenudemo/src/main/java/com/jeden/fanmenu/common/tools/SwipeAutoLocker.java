@@ -54,27 +54,27 @@ public class SwipeAutoLocker extends SwipeTools {
         switch (level) {
             case 0:
                 showToast(context, rs.getString(R.string.fan_menu_toolbox_auto_locker_0));
-                view.getIconView().setBackgroundResource(R.drawable.fan_item_icon_locker_0);
+                view.setItemIcon(rs.getDrawable(R.drawable.fan_item_icon_locker_0));
                 break;
             case 1:
                 showToast(context, rs.getString(R.string.fan_menu_toolbox_auto_locker_1));
-                view.getIconView().setBackgroundResource(R.drawable.fan_item_icon_locker_1);
+                view.setItemIcon(rs.getDrawable(R.drawable.fan_item_icon_locker_1));
                 break;
             case 2:
                 showToast(context, rs.getString(R.string.fan_menu_toolbox_auto_locker_2));
-                view.getIconView().setBackgroundResource(R.drawable.fan_item_icon_locker_2);
+                view.setItemIcon(rs.getDrawable(R.drawable.fan_item_icon_locker_2));
                 break;
             case 3:
                 showToast(context, rs.getString(R.string.fan_menu_toolbox_auto_locker_3));
-                view.getIconView().setBackgroundResource(R.drawable.fan_item_icon_locker_3);
+                view.setItemIcon(rs.getDrawable(R.drawable.fan_item_icon_locker_3));
                 break;
             case 4:
                 showToast(context, rs.getString(R.string.fan_menu_toolbox_auto_locker_4));
-                view.getIconView().setBackgroundResource(R.drawable.fan_item_icon_locker_4);
+                view.setItemIcon(rs.getDrawable(R.drawable.fan_item_icon_locker_4));
                 break;
             case 5:
                 showToast(context, rs.getString(R.string.fan_menu_toolbox_auto_locker_5));
-                view.getIconView().setBackgroundResource(R.drawable.fan_item_icon_locker_5);
+                view.setItemIcon(rs.getDrawable(R.drawable.fan_item_icon_locker_5));
                 break;
             default:
                 break;

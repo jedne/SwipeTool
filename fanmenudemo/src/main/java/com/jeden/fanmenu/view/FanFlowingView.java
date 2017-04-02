@@ -1,13 +1,18 @@
 package com.jeden.fanmenu.view;
 
+import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
+import android.view.ViewConfiguration;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
-import com.jeden.fanmenu.common.FanMenuManager;
+import com.jeden.fanmenu.common.model.FanMenuConfig;
+import com.jeden.fanmenu.util.FanLog;
+import com.jeden.fanmenu.view.base.FanMenuManager;
 
 import java.lang.reflect.Field;
 
@@ -59,9 +64,16 @@ public class FanFlowingView extends ImageView{
      */
     private float yInView;
 
+    /**
+     * 手指最短滑动距离
+     */
+    private int mTouchSlop;
+
     public FanFlowingView(Context context) {
         super(context);
         mSreenWidth = context.getResources().getDisplayMetrics().widthPixels;
+        ViewConfiguration mConfig = ViewConfiguration.get(context);
+        mTouchSlop = mConfig.getScaledTouchSlop();
     }
 
     public FanFlowingView(Context context, AttributeSet attrs) {
@@ -96,11 +108,11 @@ public class FanFlowingView extends ImageView{
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 // 如果手指离开屏幕时，xDownInScreen和xInScreen相等，且yDownInScreen和yInScreen相等，则视为触发了单击事件。
-                if (xDownInScreen == xInScreen && yDownInScreen == yInScreen) {
+                if (Math.abs(xDownInScreen - xInScreen) < mTouchSlop && Math.abs(yDownInScreen - yInScreen) < mTouchSlop) {
+                    mParams.x = mParams.x > mSreenWidth / 2 ? mSreenWidth : 0;
+                    updateViewPosition();
                     openFanMenu();
-                }
-                else
-                {
+                } else {
                     slideToEdge();
                 }
                 break;
@@ -139,6 +151,24 @@ public class FanFlowingView extends ImageView{
                     int values = (Integer) animation.getAnimatedValue();
                     mParams.x = values;
                     updateViewPosition();
+                }
+            });
+            va.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    FanMenuConfig.saveMenuConfig();
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
                 }
             });
             va.start();

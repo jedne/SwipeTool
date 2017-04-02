@@ -59,10 +59,10 @@ public class SwipeBlueTooth extends SwipeTools {
         Resources rs = context.getResources();
         if (isEnable) {
             showToast(context, rs.getString(R.string.fan_menu_toolbox_bluetooth_on));
-            view.getIconView().setBackgroundResource(R.drawable.fan_item_icon_bluetooth_on);
+            view.setItemIcon(rs.getDrawable(R.drawable.fan_item_icon_bluetooth_on));
         } else {
             showToast(context, rs.getString(R.string.fan_menu_toolbox_bluetooth_off));
-            view.getIconView().setBackgroundResource(R.drawable.fan_item_icon_bluetooth_off);
+            view.setItemIcon(rs.getDrawable(R.drawable.fan_item_icon_bluetooth_off));
         }
     }
 }

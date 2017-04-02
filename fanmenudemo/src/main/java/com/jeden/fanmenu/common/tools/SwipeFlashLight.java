@@ -1,13 +1,14 @@
 package com.jeden.fanmenu.common.tools;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.jeden.fanmenu.R;
+import com.jeden.fanmenu.util.FanLog;
 
 /**
  * Created by jeden on 2017/3/23.
@@ -37,25 +38,25 @@ public class SwipeFlashLight extends SwipeTools {
 
     @Override
     public void viewBind(Context context) {
-        changeViewState();
+        changeViewState(context);
     }
 
     @Override
     public void changeState(Context context) {
         onAndOff(context);
-        changeViewState();
+        changeViewState(context);
     }
 
-    private void changeViewState() {
+    private void changeViewState(Context context) {
         SwipeView view = mSwipeView.get();
         if (view == null) {
             return;
         }
-
+        Resources rs = context.getResources();
         if (mIsOpen) {
-            view.getIconView().setBackgroundResource(R.drawable.fan_item_icon_lightbulb_on);
+            view.setItemIcon(rs.getDrawable(R.drawable.fan_item_icon_lightbulb_on));
         } else {
-            view.getIconView().setBackgroundResource(R.drawable.fan_item_icon_lightbulb_off);
+            view.setItemIcon(rs.getDrawable(R.drawable.fan_item_icon_lightbulb_off));
         }
     }
 
@@ -102,7 +103,7 @@ public class SwipeFlashLight extends SwipeTools {
             // send broadcast for widget
             //调完之后可以通知界面更新
         } catch (RuntimeException e) {
-            Toast.makeText(context, "null", Toast.LENGTH_SHORT).show();
+            FanLog.e(TAG, "onAndOff e:" + e);
         }
     }
 

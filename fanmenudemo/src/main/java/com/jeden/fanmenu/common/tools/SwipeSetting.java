@@ -1,7 +1,6 @@
 package com.jeden.fanmenu.common.tools;
 
 import android.content.Context;
-import android.content.Intent;
 
 import com.jeden.fanmenu.activitys.FanMenuSettingActivity;
 
@@ -37,8 +36,6 @@ public class SwipeSetting extends SwipeTools {
     @Override
     public void changeState(Context context) {
         mCloseAfterChange = true;
-        Intent intent = new Intent(context, FanMenuSettingActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
+        FanMenuSettingActivity.showSetting(context);
     }
 }

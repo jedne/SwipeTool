@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 import com.jeden.fanmenu.R;
 import com.jeden.fanmenu.bean.AppInfo;
-import com.jeden.fanmenu.common.FanMenuManager;
+import com.jeden.fanmenu.view.base.FanMenuManager;
 import com.jeden.fanmenu.common.model.ContentProvider;
 import com.jeden.fanmenu.view.base.CardState;
 
@@ -29,8 +29,7 @@ import java.util.List;
  * Created by jeden on 2017/3/22.
  */
 
-public class FanMenuDialog extends RelativeLayout implements View.OnClickListener{
-
+public class FanMenuDialog extends RelativeLayout implements View.OnClickListener {
     private static final String TAG = FanMenuDialog.class.getSimpleName();
 
     private RelativeLayout mBackground;
@@ -48,6 +47,8 @@ public class FanMenuDialog extends RelativeLayout implements View.OnClickListene
     private boolean mToolboxModel = false;
 
     private DialogSubmitListener mSubmitListener;
+
+    private String mMaxSelectToast;
 
     public FanMenuDialog(Context context) {
         super(context);
@@ -72,24 +73,21 @@ public class FanMenuDialog extends RelativeLayout implements View.OnClickListene
         mCancel = (TextView) findViewById(R.id.fanmenu_dialog_cancel);
         mSubmit = (TextView) findViewById(R.id.fanmenu_dialog_submit);
         mContentView = (GridView) findViewById(R.id.fanmenu_dialog_content);
+        mMaxSelectToast = getResources().getString(R.string.fan_menu_dialog_max_select);
 
         mCancel.setOnClickListener(this);
         mSubmit.setOnClickListener(this);
     }
 
-    public void initView(int dialogtype, DialogSubmitListener listener)
-    {
+    public void initView(int dialogtype, DialogSubmitListener listener) {
         mSubmitListener = listener;
         Resources rs = getResources();
-        if(dialogtype == CardState.CARD_STATE_TOOLBOX)
-        {
+        if (dialogtype == CardState.CARD_STATE_TOOLBOX) {
             mToolboxModel = true;
             mTitle.setText(rs.getString(R.string.fan_menu_dialog_toolbox_title));
             mListItems = ContentProvider.getInstance().getAllToolBox();
             mSelectItems = ContentProvider.getInstance().getToolBox();
-        }
-        else
-        {
+        } else {
             mToolboxModel = false;
             mTitle.setText(rs.getString(R.string.fan_menu_dialog_favorite_title));
             mListItems = ContentProvider.getInstance().getAllApps();
@@ -97,14 +95,12 @@ public class FanMenuDialog extends RelativeLayout implements View.OnClickListene
         }
 
         mTempSelect.clear();
-        for(AppInfo appInfo : mSelectItems)
-        {
+        for (AppInfo appInfo : mSelectItems) {
             mTempSelect.add(appInfo);
             mListItems.remove(appInfo);
         }
 
-        for(AppInfo appInfo : mSelectItems)
-        {
+        for (AppInfo appInfo : mSelectItems) {
             mListItems.add(0, appInfo);
         }
 
@@ -165,19 +161,15 @@ public class FanMenuDialog extends RelativeLayout implements View.OnClickListene
             item.setSelectChangeListener(new FanMenuDialogItemView.DialogItemSelectChange() {
                 @Override
                 public boolean selectChangeable(View view, boolean isSelect) {
-                    if(isSelect && mTempSelect.size() >= 9)
-                    {
+                    if (isSelect && mTempSelect.size() >= 9) {
 //                        Toast.makeText(getContext(), "最多只能选9个", Toast.LENGTH_SHORT).show();
-                        FanMenuManager.showToast(getContext(), "最多只能选9个");
+                        FanMenuManager.showToast(getContext(), mMaxSelectToast);
                         return false;
                     }
                     AppInfo appInfo = (AppInfo) view.getTag();
-                    if(isSelect && !mTempSelect.contains(appInfo))
-                    {
+                    if (isSelect && !mTempSelect.contains(appInfo)) {
                         mTempSelect.add(appInfo);
-                    }
-                    else if(!isSelect && mTempSelect.contains(appInfo))
-                    {
+                    } else if (!isSelect && mTempSelect.contains(appInfo)) {
                         mTempSelect.remove(appInfo);
                     }
 
@@ -189,8 +181,7 @@ public class FanMenuDialog extends RelativeLayout implements View.OnClickListene
         }
     }
 
-    public void closeDialog()
-    {
+    public void closeDialog() {
         ValueAnimator va = ValueAnimator.ofFloat(1.0f, 0f);
         va.setDuration(500);
         va.setInterpolator(new AnticipateOvershootInterpolator(0.9f));
@@ -226,7 +217,7 @@ public class FanMenuDialog extends RelativeLayout implements View.OnClickListene
         va.start();
     }
 
-    public void showDialog(){
+    public void showDialog() {
         final ValueAnimator va = ValueAnimator.ofFloat(0f, 1.0f);
         va.setDuration(500);
         va.setInterpolator(new OvershootInterpolator(1.2f));
@@ -244,35 +235,27 @@ public class FanMenuDialog extends RelativeLayout implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        if(v == mCancel)
-        {
+        if (v == mCancel) {
             closeDialog();
-        }
-        else if(v == mSubmit)
-        {
+        } else if (v == mSubmit) {
             closeDialog();
             mSelectItems.clear();
-            for(AppInfo appInfo : mTempSelect)
-            {
+            for (AppInfo appInfo : mTempSelect) {
                 mSelectItems.add(appInfo);
             }
-            if(mToolboxModel)
-            {
+            if (mToolboxModel) {
                 ContentProvider.getInstance().saveToolbox();
-            }
-            else
-            {
+            } else {
                 ContentProvider.getInstance().saveFavorite();
             }
 
-            if(mSubmitListener != null)
-            {
+            if (mSubmitListener != null) {
                 mSubmitListener.dialogSubmit();
             }
         }
     }
 
-    public interface DialogSubmitListener{
+    public interface DialogSubmitListener {
         void dialogSubmit();
     }
 }

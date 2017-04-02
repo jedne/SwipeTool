@@ -52,10 +52,10 @@ public class SwipeData extends SwipeTools {
 
         Resources rs = context.getResources();
         if (isMobileDataEnable(context)) {
-            view.getIconView().setBackgroundResource(R.drawable.fan_item_icon_data_on);
+            view.setItemIcon(rs.getDrawable(R.drawable.fan_item_icon_data_on));
             showToast(context, rs.getString(R.string.fan_menu_toolbox_data_on));
         } else {
-            view.getIconView().setBackgroundResource(R.drawable.fan_item_icon_data_off);
+            view.setItemIcon(rs.getDrawable(R.drawable.fan_item_icon_data_off));
             if (mDataAvailable)
                 showToast(context, rs.getString(R.string.fan_menu_toolbox_data_off));
         }

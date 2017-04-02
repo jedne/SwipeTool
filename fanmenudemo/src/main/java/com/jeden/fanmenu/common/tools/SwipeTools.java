@@ -2,7 +2,7 @@ package com.jeden.fanmenu.common.tools;
 
 import android.content.Context;
 
-import com.jeden.fanmenu.common.FanMenuManager;
+import com.jeden.fanmenu.view.base.FanMenuManager;
 
 import java.lang.ref.WeakReference;
 

@@ -121,7 +121,8 @@ public class FanRootView extends FrameLayout {
         mMenuView.setMenuStateChangeListener(menuStateChangeListener);
 
         int halfWidth = getContext().getResources().getDimensionPixelSize(R.dimen.fan_menu_item_half_width);
-        mMirrorView = (FanMenuItemView) LayoutInflater.from(getContext()).inflate(R.layout.fan_menu_item_layout, null);
+//        mMirrorView = (FanMenuItemView) LayoutInflater.from(getContext()).inflate(R.layout.fan_menu_item_layout, null);
+        mMirrorView = new FanMenuItemView(getContext());
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(halfWidth * 2, halfWidth * 2);
         addView(mMirrorView, lp);
 
@@ -249,13 +250,17 @@ public class FanRootView extends FrameLayout {
         } else if (selectState > CardState.CARD_STATE_FAVORITE) {
             selectState = CardState.CARD_STATE_RECENTLY;
         }
-        mSelectTextIndex = selectState;
+
+        if(mSelectTextIndex != selectState) {
+            mSelectTextIndex = selectState;
+
+            FanMenuConfig.getMenuConfig().setCardIndex(mSelectTextIndex);
+            FanMenuConfig.saveMenuConfig();
+        }
 
         mSelectTextView.setRotateView(this.mSelectTextIndex, offset);
         mTextIndicator.setRotateView(this.mSelectTextIndex, offset);
         mMenuView.setRotateView(this.mSelectTextIndex, offset);
-
-        FanMenuConfig.getMenuConfig().setCardIndex(mSelectTextIndex);
     }
 
     public void updateFanMenuPositionState(int positionState) {
@@ -284,6 +289,9 @@ public class FanRootView extends FrameLayout {
 
         @Override
         public void longClickStateChange(View view, boolean isEditModel) {
+            if(mEditView != null) {
+                mEditView.endEditModel();
+            }
             mEditState = isEditModel ? STATE_EDIT : STATE_NORMAL;
             if (view != null && view instanceof FanMenuLayout)
                 mEditView = (FanMenuLayout) view;
@@ -323,7 +331,7 @@ public class FanRootView extends FrameLayout {
 
         @Override
         public void menuItemClicked(View view, AppInfo appInfo) {
-            Log.v(TAG, "menuItemClicked appInfo:" + appInfo);
+            FanLog.v(TAG, "menuItemClicked appInfo:" + appInfo);
             if (switchOrStartActivity(view, appInfo)) {
                 FanMenuManager.closeFanMenu(getContext());
             }
@@ -352,7 +360,7 @@ public class FanRootView extends FrameLayout {
     public void scrollToState(final int fromeState, final int toState, float offset) {
         float temp = toState - fromeState;
         ValueAnimator va = ValueAnimator.ofFloat(offset, temp);
-        va.setDuration(250);
+        va.setDuration((long)Math.round((temp - offset) * 100) + 250);
         va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -511,5 +519,14 @@ public class FanRootView extends FrameLayout {
         mCenterView.setScaleY(offset);
         mSelectTextView.setScaleY(offset);
         mMenuView.setScaleY(offset);
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
+            closeFanMenu();
+            return true;
+        }
+        return super.dispatchKeyEvent(event);
     }
 }

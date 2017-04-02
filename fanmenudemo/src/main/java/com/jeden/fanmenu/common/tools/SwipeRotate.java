@@ -51,10 +51,10 @@ public class SwipeRotate extends SwipeTools {
 
         Resources rs = context.getResources();
         if (getRotationStatus(context) == 1) {
-            view.getIconView().setBackgroundResource(R.drawable.fan_item_icon_rotate_on);
+            view.setItemIcon(rs.getDrawable(R.drawable.fan_item_icon_rotate_on));
             showToast(context, rs.getString(R.string.fan_menu_toolbox_rotate_on));
         } else {
-            view.getIconView().setBackgroundResource(R.drawable.fan_item_icon_rotate_off);
+            view.setItemIcon(rs.getDrawable(R.drawable.fan_item_icon_rotate_off));
             showToast(context, rs.getString(R.string.fan_menu_toolbox_rotate_off));
         }
     }

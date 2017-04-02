@@ -3,6 +3,7 @@ package com.jeden.fanmenu.view;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
@@ -12,19 +13,20 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.jeden.fanmenu.R;
+import com.jeden.fanmenu.view.base.CardState;
 import com.jeden.fanmenu.view.base.CommonPositionViewGroup;
 import com.jeden.fanmenu.view.base.MenuLayoutStateChangeable;
-import com.jeden.fanmenu.view.base.CardState;
 
 /**
  * Created by Administrator on 2017/3/12.
  */
 
-public class FanMenuView extends CommonPositionViewGroup{
-
+public class FanMenuView extends CommonPositionViewGroup {
+    private static final String TAG = FanMenuView.class.getSimpleName();
     private static final float CUR_DEGREE = 90;
     private Paint mPaint;
     private Paint mAlphaPaint;
+    private Paint mInnerPaint;
     private int mOuterRadius;
     private int mInnerRadius;
     private int[] mColors;
@@ -60,7 +62,7 @@ public class FanMenuView extends CommonPositionViewGroup{
         mRecently = (FanMenuLayout) findViewById(R.id.fanmenu_menu_layout_id_recently);
     }
 
-    public void initView(Context context){
+    public void initView(Context context) {
         Resources rs = context.getResources();
         mOuterRadius = rs.getDimensionPixelSize(R.dimen.fan_menu_layout_outer_radius);
         mInnerRadius = rs.getDimensionPixelSize(R.dimen.fan_menu_layout_inner_radius);
@@ -76,11 +78,19 @@ public class FanMenuView extends CommonPositionViewGroup{
 
         mPaint = new Paint();
         mPaint.setStyle(Paint.Style.FILL);
+        mPaint.setAntiAlias(true);
+
+        mInnerPaint = new Paint();
+        mInnerPaint.setStyle(Paint.Style.FILL);
+        mInnerPaint.setAntiAlias(true);
+        mInnerPaint.setColor(rs.getColor(R.color.fan_menu_background_color));
 
         mAlphaPaint = new Paint();
         mAlphaPaint.setStyle(Paint.Style.FILL);
-        mAlphaPaint.setAlpha(69);
-        mAlphaPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        mAlphaPaint.setAlpha(255);
+        mAlphaPaint.setColor(Color.RED);
+        mAlphaPaint.setAntiAlias(true);
+        mAlphaPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
     }
 
     @Override
@@ -91,10 +101,9 @@ public class FanMenuView extends CommonPositionViewGroup{
         setPivotY(getHeight());
 
         int count = getChildCount();
-        for(int i = 0; i < count; i++)
-        {
+        for (int i = 0; i < count; i++) {
             View child = getChildAt(i);
-            if(child instanceof FanMenuLayout){
+            if (child instanceof FanMenuLayout) {
                 ((FanMenuLayout) child).setPositionState(state);
             }
         }
@@ -131,7 +140,7 @@ public class FanMenuView extends CommonPositionViewGroup{
         for (int i = 0; i < count; i++) {
             View child = getChildAt(i);
 
-            if(!(child instanceof FanMenuLayout)){
+            if (!(child instanceof FanMenuLayout)) {
                 break;
             }
 
@@ -148,15 +157,11 @@ public class FanMenuView extends CommonPositionViewGroup{
     @Override
     protected boolean drawChild(Canvas canvas, View child, long drawingTime) {
 
-        if(!(child instanceof FanMenuLayout)){
-            return super.drawChild(canvas, child, drawingTime);
-        }
-
         int index = indexOfChild(child);
 
 //        float rotateDegree = index * CUR_DEGREE + mOffsetDegree;
         float rotateDegree = getCurrentDegreeByChildIndex(index) + mOffsetDegree;
-        rotateDegree = isLeft() ? rotateDegree : - rotateDegree;
+        rotateDegree = isLeft() ? rotateDegree : -rotateDegree;
 
         canvas.save();
         canvas.rotate(rotateDegree, isLeft() ? 0 : getWidth(), getHeight());
@@ -165,15 +170,11 @@ public class FanMenuView extends CommonPositionViewGroup{
         return result;
     }
 
-    public float getCurrentDegreeByChildIndex(int index)
-    {
+    public float getCurrentDegreeByChildIndex(int index) {
         int temp = mCurrentPage - index - 1;
-        if(temp == -2)
-        {
+        if (temp == -2) {
             temp = 1;
-        }
-        else if(temp == 2)
-        {
+        } else if (temp == 2) {
             temp = -1;
         }
 
@@ -182,18 +183,18 @@ public class FanMenuView extends CommonPositionViewGroup{
 
     /**
      * 旋转指示器指示的位置
-     * @param cur 当前指示的是哪个位置，（0,1,2）
+     *
+     * @param cur    当前指示的是哪个位置，（0,1,2）
      * @param offset 偏移（-1 -0 - 1）
      */
-    public void setRotateView(int cur, float offset){
+    public void setRotateView(int cur, float offset) {
         mCurrentPage = cur;
         mOffsetDegree = offset * CUR_DEGREE;
 
         mFavorite.setDisableTouchEvent(true);
         mRecently.setDisableTouchEvent(true);
         mToolBox.setDisableTouchEvent(true);
-        switch (mCurrentPage)
-        {
+        switch (mCurrentPage) {
             case CardState.CARD_STATE_FAVORITE:
                 mFavorite.setDisableTouchEvent(false);
                 break;
@@ -218,6 +219,8 @@ public class FanMenuView extends CommonPositionViewGroup{
         canvas.drawCircle(isLeft() ? 0 : getWidth(), getHeight(), mOuterRadius, mPaint);
 
         canvas.drawCircle(isLeft() ? 0 : getWidth(), getHeight(), mInnerRadius, mAlphaPaint);
+
+        canvas.drawCircle(isLeft() ? 0 : getWidth(), getHeight(), mInnerRadius, mInnerPaint);
     }
 
     @Override

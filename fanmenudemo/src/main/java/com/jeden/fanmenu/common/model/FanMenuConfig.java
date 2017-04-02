@@ -69,5 +69,4 @@ public class FanMenuConfig {
     public void setCardIndex(int cardIndex) {
         this.cardIndex = cardIndex;
     }
-
 }

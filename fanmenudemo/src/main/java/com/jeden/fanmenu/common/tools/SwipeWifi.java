@@ -57,10 +57,10 @@ public class SwipeWifi extends SwipeTools {
 
         Resources rs = context.getResources();
         if (isEnable) {
-            view.getIconView().setBackgroundResource(R.drawable.fan_item_icon_wifi_on);
+            view.setItemIcon(rs.getDrawable(R.drawable.fan_item_icon_wifi_on));
             showToast(context, rs.getString(R.string.fan_menu_toolbox_wifi_on));
         } else {
-            view.getIconView().setBackgroundResource(R.drawable.fan_item_icon_wifi_off);
+            view.setItemIcon(rs.getDrawable(R.drawable.fan_item_icon_wifi_off));
             showToast(context, rs.getString(R.string.fan_menu_toolbox_wifi_off));
         }
     }

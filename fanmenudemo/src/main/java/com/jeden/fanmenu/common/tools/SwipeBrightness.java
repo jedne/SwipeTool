@@ -2,6 +2,7 @@ package com.jeden.fanmenu.common.tools;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.PowerManager;
 import android.provider.Settings;
 
@@ -62,19 +63,20 @@ public class SwipeBrightness extends SwipeTools {
         if (view == null) {
             return;
         }
+        Resources rs = context.getResources();
 
         int bright = getBrightStatus(context);
         switch (bright) {
             case LIGHT_NORMAL:
-                view.getIconView().setBackgroundResource(R.drawable.fan_item_icon_bright_3);
+                view.setItemIcon(rs.getDrawable(R.drawable.fan_item_icon_bright_3));
                 break;
             case LIGHT_50_PERCENT:
             case LIGHT_75_PERCENT:
             case LIGHT_100_PERCENT:
-                view.getIconView().setBackgroundResource(R.drawable.fan_item_icon_bright_2);
+                view.setItemIcon(rs.getDrawable(R.drawable.fan_item_icon_bright_2));
                 break;
             case LIGHT_AUTO:
-                view.getIconView().setBackgroundResource(R.drawable.fan_item_icon_bright_1);
+                view.setItemIcon(rs.getDrawable(R.drawable.fan_item_icon_bright_1));
                 break;
             case LIGHT_ERR:
                 break;
