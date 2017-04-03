@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.jeden.fanmenu.view.FanRootView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fanmenu="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/fan_menu_common_transparent_color">
+    <com.jeden.fanmenu.view.FanBackgroundView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/fanmenu_background_view_id"
+        android:background="@color/fan_menu_background_color"/>
+    <com.jeden.fanmenu.view.FanMenuView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center|right"
+        android:id="@+id/fanmenu_menu_view_id"
+        android:background="@color/fan_menu_common_transparent_color">
+        <com.jeden.fanmenu.view.FanMenuLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/fanmenu_menu_layout_id_recently"
+            fanmenu:menuType="1"
+            fanmenu:longClickable="false"
+            android:background="@null">
+
+        </com.jeden.fanmenu.view.FanMenuLayout>
+        <com.jeden.fanmenu.view.FanMenuLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            fanmenu:menuType="2"
+            fanmenu:longClickable="true"
+            android:id="@+id/fanmenu_menu_layout_id_toolbox"
+            android:background="@null">
+
+        </com.jeden.fanmenu.view.FanMenuLayout>
+        <com.jeden.fanmenu.view.FanMenuLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            fanmenu:menuType="3"
+            fanmenu:longClickable="true"
+            android:id="@+id/fanmenu_menu_layout_id_favorite"
+            android:background="@null">
+
+        </com.jeden.fanmenu.view.FanMenuLayout>
+    </com.jeden.fanmenu.view.FanMenuView>
+    <com.jeden.fanmenu.view.FanSelectTextLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="bottom|center|right"
+        android:id="@+id/fanmenu_select_text_layout_id"
+        android:background="@color/fan_menu_common_transparent_color">
+        <com.jeden.fanmenu.view.FanSelectTextIndicator
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/fan_menu_common_transparent_color"
+            android:id="@+id/fanmenu_select_text_indicator_id"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/fanmenu_select_text_view_recently"
+            android:textSize="@dimen/fan_menu_select_text_size"
+            android:textColor="@color/fan_menu_common_white_color"
+            android:maxWidth="@dimen/fan_menu_select_text_max_width"
+            android:text="@string/fan_menu_select_text_recently"
+            android:maxLines="1" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/fanmenu_select_text_view_toolbox"
+            android:textSize="@dimen/fan_menu_select_text_size"
+            android:textColor="@color/fan_menu_common_white_color"
+            android:maxWidth="@dimen/fan_menu_select_text_max_width"
+            android:text="@string/fan_menu_select_text_toolbox"
+            android:maxLines="1" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/fanmenu_select_text_view_favorite"
+            android:textSize="@dimen/fan_menu_select_text_size"
+            android:textColor="@color/fan_menu_common_white_color"
+            android:maxWidth="@dimen/fan_menu_select_text_max_width"
+            android:text="@string/fan_menu_select_text_favorite"
+            android:maxLines="1" />
+    </com.jeden.fanmenu.view.FanSelectTextLayout>
+    <com.jeden.fanmenu.view.FanCenterView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/fanmenu_center_view_id"
+        android:layout_gravity="bottom|center|right"/>
+</com.jeden.fanmenu.view.FanRootView>

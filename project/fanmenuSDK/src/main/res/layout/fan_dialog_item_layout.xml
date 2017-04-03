@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.jeden.fanmenu.view.FanMenuDialogItemView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <ImageView
+            android:id="@+id/fan_dialog_item_icon"
+            android:layout_width="@dimen/fan_menu_dialog_item_width"
+            android:layout_height="@dimen/fan_menu_dialog_item_width"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="3dp"
+            android:background="@drawable/fan_item_icon_bluetooth_on"/>
+
+        <TextView
+            android:id="@+id/fan_dialog_item_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/fan_dialog_item_icon"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:layout_marginTop="1dp"
+            android:maxLines="1"
+            android:textColor="@color/fan_menu_common_content_text_color"
+            android:textSize="@dimen/fan_menu_dialog_content_text_size" />
+
+        <ImageView
+            android:id="@+id/fan_dialog_item_circle"
+            android:layout_width="@dimen/fan_menu_dialog_item_circle_width"
+            android:layout_height="@dimen/fan_menu_dialog_item_circle_width"
+            android:layout_marginRight="13dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/fan_dialog_item_circle"
+            android:scaleType="center"
+            android:background="@drawable/fan_dialog_item_circle_bg"/>
+    </RelativeLayout>
+</com.jeden.fanmenu.view.FanMenuDialogItemView>
