@@ -33,6 +33,7 @@ public class FanMenuItemView extends CommonPositionView implements SwipeView{
     private float mTitleT;
     private float mTitleL;
     private int mDelW;
+    private int mDelR;
     private Drawable mIcon;
     private String mTitle;
     private boolean mDelShow;
@@ -59,10 +60,12 @@ public class FanMenuItemView extends CommonPositionView implements SwipeView{
         mWidth = rs.getDimensionPixelSize(R.dimen.fan_menu_item_title_width);
         mIconW = rs.getDimensionPixelSize(R.dimen.fan_menu_item_icon_width);
         mDelW = rs.getDimensionPixelSize(R.dimen.fan_menu_item_close_width);
+        int marginDP = FanMenuViewTools.dip2px(context, 3);
 
+        mDelR = mDelW + marginDP;
         mHeight = mWidth;
         mIconH = mIconW;
-        mIconT = FanMenuViewTools.dip2px(context, 3);
+        mIconT = marginDP;
         mIconL = (mWidth - mIconW) / 2;
         mTitleT = mHeight;
         mTitleL = 0;
@@ -70,13 +73,13 @@ public class FanMenuItemView extends CommonPositionView implements SwipeView{
         mTitlePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mTitlePaint.setColor(rs.getColor(R.color.fan_menu_common_white_color));
         mTitlePaint.setTextSize(rs.getDimensionPixelSize(R.dimen.fan_menu_item_title_size));
-        Paint.FontMetrics fontMetrics= mTitlePaint.getFontMetrics();
+        Paint.FontMetrics fontMetrics = mTitlePaint.getFontMetrics();
         float fontTotalHeight = fontMetrics.bottom - fontMetrics.top;
         float offY = fontTotalHeight / 2 - fontMetrics.bottom;
         mTitleT -= offY;
 
         mDel = rs.getDrawable(R.drawable.fan_item_close);
-        mDel.setBounds(0, 0, mDelW, mDelW);
+        mDel.setBounds(marginDP, 0, mDelR, mDelW);
     }
 
     public void showDelBtn() {
@@ -91,8 +94,9 @@ public class FanMenuItemView extends CommonPositionView implements SwipeView{
 
     public void setTitle(String title) {
         mTitle = title;
+        mTitle = mTitle.trim();
         float titleW = mTitlePaint.measureText(mTitle);
-        if(titleW > mWidth) {
+        if (titleW > mWidth) {
             int subIndex = mTitlePaint.breakText(mTitle, 0, mTitle.length(), true, mWidth, null);
             mTitle = mTitle.substring(0, subIndex) + "...";
             titleW = mWidth;
@@ -107,17 +111,17 @@ public class FanMenuItemView extends CommonPositionView implements SwipeView{
     }
 
     public void setItemIcon(Drawable icon) {
-        mIcon = icon;
+        mIcon = icon.getConstantState().newDrawable();
+
         mIcon.setBounds(mIconL, mIconT, mIconL + mIconW, mIconT + mIconH);
         invalidate();
     }
 
-    public Rect getDeleteRect(){
-        return new Rect(0, 0, mDelW, mDelW);
+    public Rect getDeleteRect() {
+        return new Rect(0, 0, mDelR, mDelR);
     }
 
-    public void setToolboxModel(boolean toolboxModel)
-    {
+    public void setToolboxModel(boolean toolboxModel) {
         mToolboxModel = toolboxModel;
     }
 
@@ -144,21 +148,18 @@ public class FanMenuItemView extends CommonPositionView implements SwipeView{
 //        super.onDraw(canvas);
         mIcon.draw(canvas);
         canvas.drawText(mTitle, mTitleL, mTitleT, mTitlePaint);
-        if(mDelShow)
-        mDel.draw(canvas);
+        if (mDelShow)
+            mDel.draw(canvas);
     }
 
     @Override
     public void setTag(Object tag) {
         super.setTag(tag);
-        if(tag instanceof AppInfo)
-        {
-            AppInfo appInfo = (AppInfo)tag;
-            if(appInfo.getIntent() == null)
-            {
+        if (tag instanceof AppInfo) {
+            AppInfo appInfo = (AppInfo) tag;
+            if (appInfo.getIntent() == null) {
                 SwipeTools tools = ToolboxHelper.checkSwipeTools(getContext(), appInfo);
-                if(tools != null)
-                {
+                if (tools != null) {
                     tools.bindSwipeView(getContext(), this);
                 }
             }

@@ -124,7 +124,10 @@ public class AppInfoHelper {
     private static void initRecentlyFirstTime(List<AppInfo> allApp, List<AppInfo> needApp) {
         for (int i = 0; i < allApp.size(); i++) {
             AppInfo appInfo = allApp.get(i);
-            if (i < 9 && needApp.size() < 9) {
+            if (needApp.size() < 9) {
+                if (needApp.contains(appInfo)) {
+                    continue;
+                }
                 needApp.add(appInfo);
             } else {
                 return;
@@ -148,7 +151,7 @@ public class AppInfoHelper {
             String pk = array.optString(j);
             for (int i = 0; i < allApp.size(); i++) {
                 AppInfo appInfo = allApp.get(i);
-                if (pk != null && appInfo.getPkgName().equals(pk)) {
+                if (pk != null && appInfo.getPkgName().equals(pk) && !favorite.contains(appInfo)) {
                     favorite.add(appInfo);
                     if (favorite.size() >= 9) {
                         return;
@@ -182,45 +185,45 @@ public class AppInfoHelper {
     public static AppInfo generateToolbox(Resources rs, String pkgName) {
         AppInfo appInfo = new AppInfo();
         if (TOOLBOX_PKG_SCREENSHOT.equals(pkgName)) {
-            appInfo.setAppIcon(compressDrawable(rs.getDrawable(R.drawable.fan_item_icon_screenshot)));
+            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_screenshot));
             appInfo.setPkgName(pkgName);
             appInfo.setAppLabel(rs.getString(R.string.fan_menu_toolbox_screenshot_title));
         } else if (TOOLBOX_PKG_ALARM.equals(pkgName)) {
-            appInfo.setAppIcon(compressDrawable(rs.getDrawable(R.drawable.fan_item_icon_alarm)));
+            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_alarm));
             appInfo.setPkgName(pkgName);
             appInfo.setAppLabel(rs.getString(R.string.fan_menu_toolbox_alarm_title));
 
             Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM);
             appInfo.setIntent(intent);
         } else if (TOOLBOX_PKG_BLUETOOTH.equals(pkgName)) {
-            appInfo.setAppIcon(compressDrawable(rs.getDrawable(R.drawable.fan_item_icon_bluetooth_on)));
+            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_bluetooth_on));
             appInfo.setPkgName(pkgName);
             appInfo.setAppLabel(rs.getString(R.string.fan_menu_toolbox_bluetooth_title));
         } else if (TOOLBOX_PKG_CALCULATOR.equals(pkgName)) {
-            appInfo.setAppIcon(compressDrawable(rs.getDrawable(R.drawable.fan_item_icon_calculator)));
+            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_calculator));
             appInfo.setPkgName(pkgName);
             appInfo.setAppLabel(rs.getString(R.string.fan_menu_toolbox_calculator_title));
         } else if (TOOLBOX_PKG_FLIGHT.equals(pkgName)) {
-            appInfo.setAppIcon(compressDrawable(rs.getDrawable(R.drawable.fan_item_icon_flight_on)));
+            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_flight_on));
             appInfo.setPkgName(pkgName);
             appInfo.setAppLabel(rs.getString(R.string.fan_menu_toolbox_flight_title));
 
             Intent intent = new Intent(Settings.ACTION_AIRPLANE_MODE_SETTINGS);
             appInfo.setIntent(intent);
         } else if (TOOLBOX_PKG_LOCKER.equals(pkgName)) {
-            appInfo.setAppIcon(compressDrawable(rs.getDrawable(R.drawable.fan_item_icon_locker_0)));
+            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_locker_0));
             appInfo.setPkgName(pkgName);
             appInfo.setAppLabel(rs.getString(R.string.fan_menu_toolbox_locker_title));
         } else if (TOOLBOX_PKG_ROTATE.equals(pkgName)) {
-            appInfo.setAppIcon(compressDrawable(rs.getDrawable(R.drawable.fan_item_icon_rotate_on)));
+            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_rotate_on));
             appInfo.setPkgName(pkgName);
             appInfo.setAppLabel(rs.getString(R.string.fan_menu_toolbox_rotate_title));
         } else if (TOOLBOX_PKG_WIFI.equals(pkgName)) {
-            appInfo.setAppIcon(compressDrawable(rs.getDrawable(R.drawable.fan_item_icon_wifi_on)));
+            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_wifi_on));
             appInfo.setPkgName(pkgName);
             appInfo.setAppLabel(rs.getString(R.string.fan_menu_toolbox_wifi_title));
         } else if (TOOLBOX_PKG_CAMERA.equals(pkgName)) {
-            appInfo.setAppIcon(compressDrawable(rs.getDrawable(R.drawable.fan_item_icon_camera)));
+            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_camera));
             appInfo.setPkgName(pkgName);
             appInfo.setAppLabel(rs.getString(R.string.fan_menu_toolbox_camera_title));
 
@@ -228,30 +231,30 @@ public class AppInfoHelper {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             appInfo.setIntent(intent);
         } else if (TOOLBOX_PKG_AUDIO.equals(pkgName)) {
-            appInfo.setAppIcon(compressDrawable(rs.getDrawable(R.drawable.fan_item_icon_audio_1)));
+            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_audio_1));
             appInfo.setPkgName(pkgName);
             appInfo.setAppLabel(rs.getString(R.string.fan_menu_toolbox_audio_title));
         } else if (TOOLBOX_PKG_SETTING.equals(pkgName)) {
-            appInfo.setAppIcon(compressDrawable(rs.getDrawable(R.drawable.fan_item_icon_setting)));
+            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_setting));
             appInfo.setPkgName(pkgName);
             appInfo.setAppLabel(rs.getString(R.string.fan_menu_toolbox_setting_title));
 
             Intent intent = new Intent(Settings.ACTION_SETTINGS);
             appInfo.setIntent(intent);
         } else if (TOOLBOX_PKG_LIGHTBULB.equals(pkgName)) {
-            appInfo.setAppIcon(compressDrawable(rs.getDrawable(R.drawable.fan_item_icon_lightbulb_on)));
+            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_lightbulb_on));
             appInfo.setPkgName(pkgName);
             appInfo.setAppLabel(rs.getString(R.string.fan_menu_toolbox_lightbulb_title));
         } else if (TOOLBOX_PKG_ISWIP.equals(pkgName)) {
-            appInfo.setAppIcon(compressDrawable(rs.getDrawable(R.drawable.fan_item_icon_iswip)));
+            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_iswip));
             appInfo.setPkgName(pkgName);
             appInfo.setAppLabel(rs.getString(R.string.fan_menu_toolbox_iswip_title));
         } else if (TOOLBOX_PKG_DATA.equals(pkgName)) {
-            appInfo.setAppIcon(compressDrawable(rs.getDrawable(R.drawable.fan_item_icon_data_on)));
+            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_data_on));
             appInfo.setPkgName(pkgName);
             appInfo.setAppLabel(rs.getString(R.string.fan_menu_toolbox_data_title));
         } else if (TOOLBOX_PKG_CALENDAR.equals(pkgName)) {
-            appInfo.setAppIcon(compressDrawable(rs.getDrawable(R.drawable.fan_item_icon_calendar)));
+            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_calendar));
             appInfo.setPkgName(pkgName);
             appInfo.setAppLabel(rs.getString(R.string.fan_menu_toolbox_calendar_title));
 
@@ -259,7 +262,7 @@ public class AppInfoHelper {
             intent.setComponent((new ComponentName("com.android.calendar", pkgName)));
             appInfo.setIntent(intent);
         } else if (TOOLBOX_PKG_BRIGHT.equals(pkgName)) {
-            appInfo.setAppIcon(compressDrawable(rs.getDrawable(R.drawable.fan_item_icon_bright_1)));
+            appInfo.setAppIcon(rs.getDrawable(R.drawable.fan_item_icon_bright_1));
             appInfo.setPkgName(pkgName);
             appInfo.setAppLabel(rs.getString(R.string.fan_menu_toolbox_bright_title));
         }
@@ -272,7 +275,7 @@ public class AppInfoHelper {
         Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
         mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
         List<ResolveInfo> resolveInfos = pm
-                .queryIntentActivities(mainIntent, PackageManager.MATCH_UNINSTALLED_PACKAGES);
+                .queryIntentActivities(mainIntent, PackageManager.GET_UNINSTALLED_PACKAGES);
         Collections.sort(resolveInfos, new ResolveInfo.DisplayNameComparator(pm));
         if (listAppInfo != null) {
             listAppInfo.clear();
@@ -297,26 +300,29 @@ public class AppInfoHelper {
         }
     }
 
-    public static void queryRecently(Context context, List<AppInfo> listAppInfo) {
-        PackageManager pm = context.getPackageManager();
-        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RecentTaskInfo> recentTaskInfo = manager.getRecentTasks(9, ActivityManager.RECENT_IGNORE_UNAVAILABLE);
-        if (null != recentTaskInfo) {
-            AppInfo appInfo;
-            for (ActivityManager.RecentTaskInfo info : recentTaskInfo) {
-                Intent intent = info.baseIntent;
-                ResolveInfo resolveInfo = pm.resolveActivity(intent, 0);
-                if (resolveInfo.activityInfo.packageName.contains(".launcher")) {
-                    break;
+    public static void queryRecently(Context context, List<AppInfo> listAppInfo, List<AppInfo> allApps) {
+        try {
+            ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+            List<ActivityManager.RecentTaskInfo> recentTaskInfo = manager.getRecentTasks(12, ActivityManager.RECENT_WITH_EXCLUDED);
+            if (null != recentTaskInfo) {
+                FanLog.v(TAG, "queryRecently recentTaskInfo size:" + recentTaskInfo.size());
+                for (ActivityManager.RecentTaskInfo info : recentTaskInfo) {
+                    Intent intent = info.baseIntent;
+                    String pkg = intent.getComponent().getPackageName();
+                    FanLog.v(TAG, "queryRecently recentTaskInfo pkg:" + pkg);
+                    for (AppInfo appInfo : allApps) {
+                        if (appInfo.getPkgName().equals(pkg)) {
+                            if (!listAppInfo.contains(appInfo) && listAppInfo.size() < 9) {
+                                FanLog.v(TAG, "queryRecently addList pkg:" + pkg);
+                                listAppInfo.add(appInfo);
+                            }
+                            break;
+                        }
+                    }
                 }
-                appInfo = new AppInfo();
-                appInfo.setAppLabel((String) resolveInfo.loadLabel(pm));
-                appInfo.setPkgName(resolveInfo.activityInfo.packageName);
-                appInfo.setAppIcon(compressDrawable(resolveInfo.loadIcon(pm)));
-                appInfo.setIntent(intent);
-                listAppInfo.add(appInfo);
-                FanLog.v(TAG, "queryRecently activityName---" + appInfo.getAppLabel());
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -325,10 +331,9 @@ public class AppInfoHelper {
         int height = drawable.getIntrinsicHeight();
         Bitmap oldBmp = drawableToBitmap(drawable);
         Matrix matrix = new Matrix();
-        float scaleWidth = ((float) 50 / width);
-        float scaleHeight = ((float) 50 / height);
-        FanLog.v(TAG, "compressDrawable scaleW:" + scaleWidth + " scaleHeight:" + scaleHeight);
-        matrix.postScale(scaleWidth, scaleHeight);
+        float scaleWidth = ((float) 80 / width);
+        float scaleHeight = ((float) 80 / height);
+//        matrix.postScale(0.5f, 0.5f);
         Bitmap newBmp = Bitmap.createBitmap(oldBmp, 0, 0, width, height, matrix, true);
         return new BitmapDrawable(newBmp);
     }

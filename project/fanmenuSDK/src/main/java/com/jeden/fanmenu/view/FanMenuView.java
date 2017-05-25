@@ -213,7 +213,21 @@ public class FanMenuView extends CommonPositionViewGroup {
         }
 //
 //        mOffsetDegree = -mOffsetDegree;
+        boolean start = offset != 0;
         invalidate();
+        rotateChild(start);
+    }
+
+    public void rotateChild(boolean start) {
+        int count = getChildCount();
+        for (int i = 0; i < count; i++) {
+            FanMenuLayout child = (FanMenuLayout) getChildAt(i);
+            if (start) {
+                child.setRotateStart();
+            } else {
+                child.setRotateEnd();
+            }
+        }
     }
 
     @Override

@@ -41,9 +41,14 @@ public class ContentProvider {
         String favoriteStr = DataBeans.getInstance().getFavorite();
         AppInfoHelper.initFavoriteByCache(mAllApps, mFavorite, favoriteStr);
 
+        initRecentlyData(context);
+    }
+
+    private void initRecentlyData(Context context) {
         String recentlyStr = DataBeans.getInstance().getRecently();
-        AppInfoHelper.queryRecently(context, mRecently);
+        AppInfoHelper.queryRecently(context, mRecently, mAllApps);
         AppInfoHelper.initRecentlyByCache(mAllApps, mRecently, recentlyStr);
+        saveRecently();
     }
 
     public List<AppInfo> getFavorite() {
@@ -79,5 +84,10 @@ public class ContentProvider {
     public void saveRecently() {
         String str = AppInfoHelper.generatePkgStr(mRecently);
         DataBeans.getInstance().saveRecently(str);
+    }
+
+    public void updateRecently(Context context) {
+        mRecently.clear();
+        initRecentlyData(context);
     }
 }

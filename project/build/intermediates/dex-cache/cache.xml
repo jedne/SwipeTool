@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="false"
+        jar="D:\workspace\github\FanMenu\project\fanmenuSDK\build\intermediates\bundles\default\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="358f3c4ecde3a16228154344a341473e90df2c98">
+        <dex dex="D:\workspace\github\FanMenu\project\app\build\intermediates\pre-dexed\debug\classes_bce3ba09ff579ff867060f88d8cd933a642899e3.jar" />
+    </item>
+
+</items>

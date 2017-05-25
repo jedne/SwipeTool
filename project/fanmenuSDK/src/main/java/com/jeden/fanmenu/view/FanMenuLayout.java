@@ -5,9 +5,13 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
@@ -15,6 +19,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.widget.FrameLayout;
 
 import com.jeden.fanmenu.R;
@@ -59,6 +64,10 @@ public class FanMenuLayout extends CommonPositionViewGroup {
     private boolean mIsDragging = false;
     private int[] mTempP = new int[2];
 
+    private Drawable mCache;
+    private boolean mRotating = false;
+    private int mBackgroundColor;
+
     private static Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -94,8 +103,11 @@ public class FanMenuLayout extends CommonPositionViewGroup {
         mItemHalfWidth = rs.getDimensionPixelSize(R.dimen.fan_menu_item_half_width);
         mItemInnerRadius = rs.getDimensionPixelSize(R.dimen.fan_menu_item_inner_radius);
         mItemOuterRadius = rs.getDimensionPixelSize(R.dimen.fan_menu_item_outer_radius);
+        mBackgroundColor = rs.getColor(R.color.fan_menu_common_transparent_color);
 
-        mTouchSlop = FanMenuViewTools.dip2px(context, 5);
+        ViewConfiguration mConfig = ViewConfiguration.get(context);
+        mTouchSlop = mConfig.getScaledTouchSlop();
+//        mTouchSlop = FanMenuViewTools.dip2px(context, 5);
 
         setPersistentDrawingCache(PERSISTENT_ALL_CACHES);
 //        setDrawingCacheEnabled(true);
@@ -262,7 +274,7 @@ public class FanMenuLayout extends CommonPositionViewGroup {
                         handler.removeCallbacks(mLongClickRunnable);
                     }
 
-                    if (mIsEditModel && mDownSelectChild != null) {
+                    if (mIsEditModel && mDownSelectChild != null && mDownType == DOWN_NULL) {
                         mIsDragging = true;
                         addMirrorViewAndDrag(moveX - mDownX, moveY - mDownY);
                     }
@@ -323,6 +335,7 @@ public class FanMenuLayout extends CommonPositionViewGroup {
         removeAllViews();
         addAllItemView();
         requestLayout();
+        mCache = null;
     }
 
     public void deleteItemAndRefresh(FanMenuItemView child) {
@@ -526,10 +539,12 @@ public class FanMenuLayout extends CommonPositionViewGroup {
                     getTop() + mDownSelectChild.getTop() + y, null, false, mMenuType == CardState.CARD_STATE_TOOLBOX);
         }
 
-
         int selectIndex = getChildByPoint(mDownSelectChild.getLeft() + mItemHalfWidth + (int) x,
                 mDownSelectChild.getTop() + mItemHalfWidth + (int) y);
         if (selectIndex >= 0 && selectIndex < mLastSlotView.length && mLastSlotView[selectIndex] != null) {
+            if(mLastSlot[0] == -1) {
+                return;
+            }
             if (selectIndex == mLastSlot[0]) {
                 return;
             }
@@ -658,6 +673,71 @@ public class FanMenuLayout extends CommonPositionViewGroup {
         for (AppInfo appInfo : data) {
             FanMenuItemView child = (FanMenuItemView) this.findViewWithTag(appInfo);
             child.hideDelBtn();
+        }
+
+        updateCacheDrawable();
+    }
+
+    @Override
+    public void setPositionState(int state) {
+        super.setPositionState(state);
+        mCache = null;
+
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP &&
+                mMenuType == CardState.CARD_STATE_RECENTLY) {
+            ContentProvider.getInstance().updateRecently(getContext());
+            refreshData();
+        }
+    }
+
+    public void updateCacheDrawable() {
+        if (getWidth() <= 0 || getHeight() <= 0) {
+            return;
+        }
+        FanLog.v(TAG, "updateCacheDrawable");
+        Bitmap cache = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_4444);
+        Canvas c = new Canvas(cache);
+        draw(c);
+        mCache = new BitmapDrawable(cache);
+    }
+
+    public Drawable getCacheDrawable() {
+        if (mCache == null) {
+            updateCacheDrawable();
+        }
+        return mCache;
+    }
+
+    public void setRotateStart() {
+        if (mRotating) {
+            return;
+        }
+
+        Drawable cache = getCacheDrawable();
+        if (cache == null) {
+            return;
+        }
+
+        setBackgroundDrawable(cache);
+        mRotating = true;
+        setChildVisible(false);
+    }
+
+    public void setRotateEnd() {
+        if (!mRotating) {
+            return;
+        }
+
+        setBackgroundColor(mBackgroundColor);
+        mRotating = false;
+        setChildVisible(true);
+    }
+
+    private void setChildVisible(boolean visible) {
+        int count = getChildCount();
+        int v = visible ? VISIBLE : GONE;
+        for (int i = 0; i < count; i++) {
+            getChildAt(i).setVisibility(v);
         }
     }
 

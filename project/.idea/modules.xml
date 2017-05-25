@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/FanMenu.iml" filepath="$PROJECT_DIR$/FanMenu.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/fanmenuSDK/fanmenuSDK.iml" filepath="$PROJECT_DIR$/fanmenuSDK/fanmenuSDK.iml" />
+      <module fileurl="file://$PROJECT_DIR$/project.iml" filepath="$PROJECT_DIR$/project.iml" />
     </modules>
   </component>
 </project>

@@ -3,6 +3,7 @@ package com.jeden.fanmenu.common;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
+import android.os.Build;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -82,8 +83,8 @@ public class FanMenuManager {
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.FILL_PARENT,
                 WindowManager.LayoutParams.FILL_PARENT,
-                WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
+                getSystemType(),
+                WindowManager.LayoutParams.FLAG_FULLSCREEN |
                         WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN |
                         WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
                 PixelFormat.TRANSLUCENT);
@@ -94,10 +95,10 @@ public class FanMenuManager {
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
+                getSystemType(),
                 WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
                 PixelFormat.TRANSLUCENT);
-        lp.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+        lp.type = getSystemType();
         lp.format = PixelFormat.RGBA_8888;
         lp.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
                 | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
@@ -125,7 +126,7 @@ public class FanMenuManager {
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.FILL_PARENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
+                getSystemType(),
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
                         WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
                 PixelFormat.TRANSLUCENT);
@@ -135,17 +136,38 @@ public class FanMenuManager {
         return lp;
     }
 
+    private int getSystemType() {
+        int type = WindowManager.LayoutParams.TYPE_TOAST;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+            type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+        } else if (Build.VERSION.SDK_INT > 24) {
+            type = WindowManager.LayoutParams.TYPE_PHONE;
+        }
+
+        return type;
+    }
+
     private void showFlowing() {
         if (mFlowingView.getParent() != null) {
             Log.w(TAG, "flowing view have showed");
             return;
         }
 
+        try {
+            mWindowManager.removeView(mFlowingView);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         if (mFlowingViewLP == null) {
             mFlowingViewLP = generateFlowingLP();
         }
         mFlowingView.setParams(mFlowingViewLP);
-        mWindowManager.addView(mFlowingView, mFlowingViewLP);
+        try {
+            mWindowManager.addView(mFlowingView, mFlowingViewLP);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private boolean isFlowingShow() {
@@ -172,8 +194,19 @@ public class FanMenuManager {
             Log.w(TAG, "fan menu have showed");
             return;
         }
+
+        try {
+            mWindowManager.removeView(mFanRootView);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         mFanRootView.initFanMenuConfig();
-        mWindowManager.addView(mFanRootView, generateFanMenuLP());
+        try {
+            mWindowManager.addView(mFanRootView, generateFanMenuLP());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         mFanRootView.showFanMenu();
     }
 
@@ -191,7 +224,11 @@ public class FanMenuManager {
 
     private void showToast(String content) {
         if (mFanToastView.getParent() == null) {
-            mWindowManager.addView(mFanToastView, generateToastLP());
+            try {
+                mWindowManager.addView(mFanToastView, generateToastLP());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             mFanToastView.showAnimator();
         }
         mFanToastView.showToast(content);
@@ -208,8 +245,19 @@ public class FanMenuManager {
             Log.w(TAG, "dialog have showed");
             return;
         }
+
+        try {
+            mWindowManager.removeView(mDialogView);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         mDialogView.initView(selectCard, listener);
-        mWindowManager.addView(mDialogView, generateFanMenuLP());
+        try {
+            mWindowManager.addView(mDialogView, generateFanMenuLP());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         mDialogView.showDialog();
     }
 

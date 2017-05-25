@@ -4,13 +4,15 @@ import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AnticipateOvershootInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
@@ -18,14 +20,14 @@ import android.widget.FrameLayout;
 import com.jeden.fanmenu.R;
 import com.jeden.fanmenu.bean.AppInfo;
 import com.jeden.fanmenu.common.FanMenuManager;
-import com.jeden.fanmenu.common.model.FanMenuConfig;
 import com.jeden.fanmenu.common.FanMenuViewTools;
+import com.jeden.fanmenu.common.model.FanMenuConfig;
 import com.jeden.fanmenu.common.tools.SwipeTools;
 import com.jeden.fanmenu.common.tools.ToolboxHelper;
 import com.jeden.fanmenu.util.FanLog;
+import com.jeden.fanmenu.view.base.CardState;
 import com.jeden.fanmenu.view.base.MenuLayoutStateChangeable;
 import com.jeden.fanmenu.view.base.PositionState;
-import com.jeden.fanmenu.view.base.CardState;
 
 /**
  * Created by jeden on 2017/3/14.
@@ -65,6 +67,7 @@ public class FanRootView extends FrameLayout {
     private float mDownInScreenY;
     private int mTouchSlop;
     private long mLastTime;
+    private boolean mClosing = false;
 
     private double mDownAngle;
 
@@ -141,6 +144,9 @@ public class FanRootView extends FrameLayout {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if (mClosing) {
+            return true;
+        }
         initVeloCityTracker(event);
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
@@ -252,7 +258,7 @@ public class FanRootView extends FrameLayout {
             selectState = CardState.CARD_STATE_RECENTLY;
         }
 
-        if(mSelectTextIndex != selectState) {
+        if (mSelectTextIndex != selectState) {
             mSelectTextIndex = selectState;
 
             FanMenuConfig.getMenuConfig().setCardIndex(mSelectTextIndex);
@@ -290,7 +296,7 @@ public class FanRootView extends FrameLayout {
 
         @Override
         public void longClickStateChange(View view, boolean isEditModel) {
-            if(mEditView != null) {
+            if (mEditView != null) {
                 mEditView.endEditModel();
             }
             mEditState = isEditModel ? STATE_EDIT : STATE_NORMAL;
@@ -347,7 +353,19 @@ public class FanRootView extends FrameLayout {
         Intent intent = appInfo.getIntent();
         if (intent != null) {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            getContext().startActivity(intent);
+            try {
+                PackageManager pm = getContext().getPackageManager();
+                ResolveInfo info = pm.resolveActivity(
+                        intent, PackageManager.MATCH_DEFAULT_ONLY);
+                if(info != null && info.activityInfo.isEnabled()) {
+                    getContext().startActivity(intent);
+                } else {
+                    FanLog.v(TAG, "startActivity intent is disable :" + appInfo.getAppLabel());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             return true;
         }
 
@@ -359,18 +377,19 @@ public class FanRootView extends FrameLayout {
     }
 
     public void scrollToState(final int fromeState, final int toState, float offset) {
-        float temp = toState - fromeState;
+        final float temp = toState - fromeState;
         ValueAnimator va = ValueAnimator.ofFloat(offset, temp);
-        va.setDuration((long)Math.round(Math.abs(temp - offset)) * 100 + 250);
+        va.setDuration((long) Math.round(Math.abs(temp - offset)) * 100 + 250);
+        va.setInterpolator(new AccelerateDecelerateInterpolator());
         va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 float value = (float) animation.getAnimatedValue();
-                if (value > 0 && (value > 0.98 && value < 1.02)) {
-                    value = 1;
-                } else if (value < 0 && (value < -0.98 && value > -1.02)) {
-                    value = -1;
-                }
+//                if (temp > 1 && value > 0 && (value > 0.98 && value < 1.02)) {
+//                    value = 1;
+//                } else if (temp < -1 && value < 0 && (value < -0.98 && value > -1.02)) {
+//                    value = -1;
+//                }
 
                 if (value >= 1) {
                     updateFanMenuSelectIndex(fromeState + 1, value - 1);
@@ -476,6 +495,7 @@ public class FanRootView extends FrameLayout {
                 scaleChild(value);
             }
         });
+        mClosing = true;
 
         va.addListener(new Animator.AnimatorListener() {
             @Override
@@ -484,6 +504,7 @@ public class FanRootView extends FrameLayout {
 
             @Override
             public void onAnimationEnd(Animator animation) {
+                mClosing = false;
                 FanMenuManager.closeFanMenu(getContext());
             }
 
