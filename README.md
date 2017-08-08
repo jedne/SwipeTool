@@ -1,7 +1,7 @@
-# FanMenu
+# SwipeTool
 一个扇形菜单，可以滑动切换，长按编辑，删除和拖动排序等
 效果图：
-![image](https://github.com/jedne/FanMenu/blob/master/pic/fanmenu.gif)
+![image](https://github.com/jedne/SwipeTool/blob/master/pic/SwipeTool.gif)
 
 使用方法：
 File->new->Import Module,选择FanMenu，导入，在gradle中添加依赖compile project(':fanmenu')
